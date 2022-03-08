@@ -1,6 +1,5 @@
 export class Hero {
     constructor(size, posX, posY, speed) {
-        this.fillColor = "#39536D";
         this.posX = posX;
         this.posY = posY;
         this.speed = speed;
@@ -12,7 +11,7 @@ export class Hero {
     drawHero() {
         let cvs = document.getElementById("cvs");
         const ctx = cvs.getContext('2d');
-        ctx.fillStyle = this.fillColor;
+        ctx.fillStyle = "#39536D";
         ctx.translate(this.posX - (this.size / 2), this.posY - (this.size / 2));
         ctx.fillRect(0, 0, this.size, this.size);
     }
