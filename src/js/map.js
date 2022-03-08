@@ -9,10 +9,10 @@ const cellHeight = Math.floor(cvsHeight / 20);
 const cvsWidth = cellHeight * 19;
 const cvsBorder = Math.floor(cellHeight / 4);
 
-
 const progress = document.querySelector(".progress");
 const levelCoin = document.querySelector(".level-coin");
 const lives = document.querySelectorAll(".lives span");
+const btns = document.querySelectorAll(".btn");
 
 levelCoin.style.fontSize = cellHeight + "px";
 levelCoin.style.width = cellHeight * 5.5 + "px";
@@ -23,6 +23,11 @@ progress.style.marginBottom = cvsBorder + "px";
 for (let live of lives) {
     live.style.width = cellHeight / 1.5 + "px";
     live.style.height = cellHeight / 1.5 + "px";
+}
+
+for (let btn of btns) {
+    btn.style.fontSize = cellHeight / 1.6 + "px";
+    btn.style.padding = cellHeight / 6 + "px";
 }
 
 const mq = window.matchMedia('(max-width: 1199px)');
@@ -94,10 +99,10 @@ export class Map {
     drawRect(ctx, x, y) {
         ctx.fillStyle = "#DAD0D0";
         ctx.fillRect(
-            this.cellHeight * x + 0.5,
-            this.cellHeight * y + 0.5,
-            this.cellHeight - 0.5,
-            this.cellHeight - 0.5
+            this.cellHeight * x + 0.2,
+            this.cellHeight * y + 0.2,
+            this.cellHeight - 0.4,
+            this.cellHeight - 0.4
         );
     }
 
