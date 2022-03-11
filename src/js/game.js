@@ -12,8 +12,8 @@ const PAUSE = "PAUSE";
 const MENU = "MENU";
 const SAVE = "SAVE";
 const LEVEL = "LEVEL ";
-const WIN = "YOU WIN !!!";
-const GAME_OVER = "GAME OVER !!!";
+const WIN = "YOU WIN !";
+const GAME_OVER = "GAME OVER !";
 const musicCoin = new Audio();
 const musicWin = new Audio();
 const message = document.querySelector("#message");
@@ -37,37 +37,29 @@ export class Game {
             window.cellSize,
             window.cellSize * 3 + window.cellSize / 2,
             window.cellSize * 11 + window.cellSize / 2,
-            window.cellSize / 29
+            window.cellSize / 30
         );
     }
 
     pass() {
+        const heroCellX = Math.floor(this.hero.posX / window.cellSize);
+        const heroCellY = Math.floor(this.hero.posY / window.cellSize);
 
-        if (this.hero.speedX > 0 && (this.hero.posY + window.cellSize / 2) % window.cellSize < window.cellSize/2)
-            this.hero.posY = Math.round(this.hero.posY / window.cellSize) * window.cellSize - window.cellSize / 2;
+        if (this.hero.speedX > 0 &&
+            this.map_1.map[heroCellY][heroCellX + 1] !== 1)
+            this.hero.posY = heroCellY * window.cellSize + window.cellSize / 2;
 
-        if (this.hero.speedX > 0 && (this.hero.posY+window.cellSize / 2) % window.cellSize > window.cellSize / 2)
-            this.hero.posY = Math.round(this.hero.posY / window.cellSize) * window.cellSize + window.cellSize / 2;
+        if (this.hero.speedX < 0 &&
+            this.map_1.map[heroCellY][heroCellX - 1] !== 1)
+            this.hero.posY = heroCellY * window.cellSize + window.cellSize / 2;
 
-        if (this.hero.speedX < 0 && (this.hero.posY + window.cellSize / 2) % window.cellSize > window.cellSize / 2)
-            this.hero.posY = Math.round(this.hero.posY / window.cellSize) * window.cellSize + window.cellSize / 2;
+        if (this.hero.speedY > 0 &&
+            this.map_1.map[heroCellY][heroCellX] !== 1)
+            this.hero.posX = heroCellX * window.cellSize + window.cellSize / 2;
 
-        if (this.hero.speedX < 0 && (this.hero.posY + window.cellSize / 2) % window.cellSize < window.cellSize / 2)
-            this.hero.posY = Math.round(this.hero.posY / window.cellSize) * window.cellSize - window.cellSize / 2;
-
-
-        if (this.hero.speedY < 0 && (this.hero.posX + window.cellSize / 2) % window.cellSize < window.cellSize / 2)
-            this.hero.posX = Math.round(this.hero.posX / window.cellSize)*window.cellSize - window.cellSize / 2;
-
-        if (this.hero.speedY < 0 && (this.hero.posX+window.cellSize / 2) % window.cellSize > window.cellSize / 2)
-            this.hero.posX = Math.round(this.hero.posX / window.cellSize) * window.cellSize + window.cellSize / 2;
-
-        if (this.hero.speedY > 0 && (this.hero.posX+window.cellSize / 2) % window.cellSize > window.cellSize / 2)
-            this.hero.posX = Math.round(this.hero.posX / window.cellSize) * window.cellSize + window.cellSize / 2;
-
-        if (this.hero.speedY > 0 && (this.hero.posX + window.cellSize / 2) % window.cellSize < window.cellSize / 2)
-            this.hero.posX = Math.round(this.hero.posX / window.cellSize) * window.cellSize - window.cellSize / 2;
-
+        if (this.hero.speedY < 0 &&
+            this.map_1.map[heroCellY][heroCellX] !== 1)
+            this.hero.posX = heroCellX * window.cellSize + window.cellSize / 2;
     }
 
     start() {
