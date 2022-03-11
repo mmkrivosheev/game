@@ -1,11 +1,11 @@
 export class Hero {
-    constructor(size, posX, posY, speed) {
+    constructor(posX, posY, speed) {
         this.posX = posX;
         this.posY = posY;
         this.speed = speed;
         this.speedX = 0;
         this.speedY = 0;
-        this.size = size;
+        this.size = cellSize;
         this.isPause = false;
     }
 

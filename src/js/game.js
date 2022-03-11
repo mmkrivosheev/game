@@ -6,13 +6,14 @@ import { HeroMapBorderLeftCollisionDetector } from "./collisions";
 import { HeroMapBorderBottomCollisionDetector } from "./collisions";
 import { HeroMapBorderTopCollisionDetector } from "./collisions";
 import { HeroStaticBodyCollisionDetector } from "./collisions";
-import { HeroGrainCollisionDetector } from "./collisions";
+import { HeroCoinCollisionDetector } from "./collisions";
 
 const PAUSE = "PAUSE";
 const MENU = "MENU";
 const SAVE = "SAVE";
 const LEVEL = "LEVEL ";
-const WIN = "YOU WIN !";
+const WON = "YOU WON !";
+const VICTORY = "VICTORY !";
 const GAME_OVER = "GAME OVER !";
 const musicCoin = new Audio();
 const musicWin = new Audio();
@@ -25,49 +26,31 @@ musicWin.src = "src/audio/win.mp3";
 
 export class Game {
     constructor() {
-        this.level = 1;
+        this.map = new Map();
+        this.hero = new Hero(
+            cellSize * 3 + cellSize / 2,
+            cellSize * 11 + cellSize / 2,
+            cellSize / 35
+        );
+        this.level = 0;
+        this.levelTolal = this.map.maps.length;
         this.coins = 0;
+        this.coinsTotal = 0;
         this.isPlay = true;
         this.isPause = false;
         this.isSound = false;
         this.isMenu = false;
         this.isSave = false;
-        this.map_1 = new Map();
-        this.hero = new Hero(
-            window.cellSize,
-            window.cellSize * 3 + window.cellSize / 2,
-            window.cellSize * 11 + window.cellSize / 2,
-            window.cellSize / 30
-        );
-    }
 
-    pass() {
-        const heroCellX = Math.floor(this.hero.posX / window.cellSize);
-        const heroCellY = Math.floor(this.hero.posY / window.cellSize);
-
-        if (this.hero.speedX > 0 &&
-            this.map_1.map[heroCellY][heroCellX + 1] !== 1)
-            this.hero.posY = heroCellY * window.cellSize + window.cellSize / 2;
-
-        if (this.hero.speedX < 0 &&
-            this.map_1.map[heroCellY][heroCellX - 1] !== 1)
-            this.hero.posY = heroCellY * window.cellSize + window.cellSize / 2;
-
-        if (this.hero.speedY > 0 &&
-            this.map_1.map[heroCellY][heroCellX] !== 1)
-            this.hero.posX = heroCellX * window.cellSize + window.cellSize / 2;
-
-        if (this.hero.speedY < 0 &&
-            this.map_1.map[heroCellY][heroCellX] !== 1)
-            this.hero.posX = heroCellX * window.cellSize + window.cellSize / 2;
     }
 
     start() {
+        this.level++;
         setCssProperties();
-        this.map_1.drawMap();
+        this.map.drawMap(this.map.maps[this.level - 1]);
         this.hero.drawHero();
         this.hero.isPause = true;
-        this.map_1.getCoinsTotal(this.map_1);
+        this.map.getCoinsTotal(this.map.maps[this.level - 1]);
         this.isSound
             ? scoreboard.classList.add("sound-on")
             : scoreboard.classList.add("sound-off");
@@ -75,6 +58,33 @@ export class Game {
         this.showAndHideMessage(LEVEL + this.level, null, 300);
         window.addEventListener("resize", setCssProperties);
         document.addEventListener("keydown", (e) => this.hero.moveHero(e));
+    }
+
+    pass() {
+        const heroCellX = Math.floor(this.hero.posX / cellSize);
+        const heroCellY = Math.floor(this.hero.posY / cellSize);
+
+        if (this.hero.speedX > 0 &&
+            heroCellX < this.map.maps[this.level - 1][0].length - 1 &&
+            this.map.maps[this.level - 1][heroCellY][heroCellX + 1] !== 1)
+            this.hero.posY = heroCellY * cellSize + cellSize / 2;
+
+        if (this.hero.speedX < 0 &&
+            heroCellX > 0 &&
+            this.map.maps[this.level - 1][heroCellY][heroCellX - 1] !== 1)
+            this.hero.posY = heroCellY * cellSize + cellSize / 2;
+
+        if (this.hero.speedY > 0 &&
+            heroCellY < this.map.maps[this.level - 1].length - 1 &&
+            this.map.maps[this.level - 1][heroCellY < this.map.maps[this.level - 1].length - 1
+                ? heroCellY + 1
+                : heroCellY][heroCellX] !== 1)
+            this.hero.posX = heroCellX * cellSize + cellSize / 2;
+
+        if (this.hero.speedY < 0 &&
+            heroCellY > 0 &&
+            this.map.maps[this.level - 1][heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
+            this.hero.posX = heroCellX * cellSize + cellSize / 2;
     }
 
     pause(boolean) {
@@ -101,7 +111,7 @@ export class Game {
     }
 
     menu() {
-        if (!this.isPause && !this.isSave) scoreboard.classList.toggle("life");
+        if (!this.isPause && !this.isSave && this.isPlay) scoreboard.classList.toggle("life");
         this.isMenu = !this.isMenu;
         this.isSave = false;
 
@@ -109,13 +119,18 @@ export class Game {
             scoreboard.innerHTML = MENU;
             this.hero.isPause = true;
         } else {
-            if (!this.isPlay) scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+            if (!this.isPlay && this.level !== this.levelTolal)
+                scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+
+            if (!this.isPlay && this.level === this.levelTolal)
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+
             this.pause(true);
         }
     }
 
     save() {
-        if (!this.isPause && !this.isMenu) scoreboard.classList.toggle("life");
+        if (!this.isPause && !this.isMenu && this.isPlay) scoreboard.classList.toggle("life");
         this.isSave = !this.isSave;
         this.isMenu = false;
 
@@ -123,7 +138,12 @@ export class Game {
             scoreboard.innerHTML = SAVE;
             this.hero.isPause = true;
         } else {
-            if (!this.isPlay) scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+            if (!this.isPlay && this.level !== this.levelTolal)
+                scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+
+            if (!this.isPlay && this.level === this.levelTolal)
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+
             this.pause(true);
         }
     }
@@ -135,50 +155,70 @@ export class Game {
         if (this.isSave) return;
 
         this.pass();
+
         this.hero.posX += this.hero.speedX;
         this.hero.posY += this.hero.speedY;
 
-        if (new HeroMapBorderRightCollisionDetector().detector(this.hero, this.map_1))
-            this.hero.posX = this.map_1.cvsWidth - this.hero.size / 2;
+        if (new HeroMapBorderRightCollisionDetector().detector(this.hero)) {
+            this.hero.posX = cvsWidth - this.hero.size / 2;
+            this.hero.speedX = 0;
+        }
 
-        if (new HeroMapBorderLeftCollisionDetector().detector(this.hero))
+        if (new HeroMapBorderLeftCollisionDetector().detector(this.hero)) {
             this.hero.posX = this.hero.size / 2;
+            this.hero.speedX = 0;
+        }
 
-        if (new HeroMapBorderBottomCollisionDetector().detector(this.hero, this.map_1))
-            this.hero.posY = this.map_1.cvsHeight - this.hero.size / 2;
+        if (new HeroMapBorderBottomCollisionDetector().detector(this.hero)) {
+            this.hero.posY = cvsHeight - this.hero.size / 2;
+            this.hero.speedY = 0;
+        }
 
-        if (new HeroMapBorderTopCollisionDetector().detector(this.hero))
+        if (new HeroMapBorderTopCollisionDetector().detector(this.hero)) {
             this.hero.posY = this.hero.size / 2;
+            this.hero.speedY = 0;
+        }
 
-        new HeroStaticBodyCollisionDetector().detector(this.hero, this.map_1).forEach(([x, y]) => {
+        new HeroStaticBodyCollisionDetector()
+            .detector(this.hero, this.map.maps[this.level - 1]).forEach(([x, y]) => {
 
             if (this.hero.speedX) {
                 this.hero.posX = this.hero.speedX > 0
-                    ? this.map_1.cellSize * x - this.map_1.cellSize / 2
-                    : this.map_1.cellSize * x + this.map_1.cellSize * 1.5;
+                    ? cellSize * x - cellSize / 2
+                    : cellSize * x + cellSize * 1.5;
+                this.hero.speedX = 0;
             }
 
             if (this.hero.speedY) {
                 this.hero.posY = this.hero.speedY > 0
-                    ? this.map_1.cellSize * y - this.map_1.cellSize / 2
-                    : this.map_1.cellSize * y + this.map_1.cellSize * 1.5;
+                    ? cellSize * y - cellSize / 2
+                    : cellSize * y + cellSize * 1.5;
+                this.hero.speedY = 0;
             }
         });
-
-        new HeroGrainCollisionDetector().detector(this.hero, this.map_1).forEach(([x, y]) => {
+        new HeroCoinCollisionDetector()
+            .detector(this.hero, this.map.maps[this.level - 1]).forEach(([x, y]) => {
             if (this.isSound) musicCoin.play();
-            this.map_1.map[y][x] = 0;
+            this.map.maps[this.level - 1][y][x] = 0;
             this.coins++;
         });
 
-        if (this.coins === this.map_1.coinsTotal) {
-            this.showAndHideMessage(WIN, musicWin, 300);
+        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.hero.drawHero();
+
+        // if (this.coins === this.map.coinsTotal) {
+        if (this.coins === 4) {
+            this.showAndHideMessage(WON, musicWin, 300);
+            this.coinsTotal += this.coins;
+            this.coins = 0;
             this.isPlay = false;
         }
 
-        this.map_1.drawMap();
-        this.hero.drawHero();
-        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+        if (!this.isPlay && this.level === this.levelTolal)
+            this.showAndHideMessage(VICTORY, null, 5000);
+
+
         requestAnimationFrame(this.tick.bind(this));
     }
 
@@ -198,6 +238,23 @@ export class Game {
                 this.hero.isPause = false;
                 this.tick();
             }
-        }, timeOn + 4500);
+
+            if (!this.isPlay && this.level !== this.levelTolal) {
+                this.isPlay = true;
+                this.hero.posX = cellSize * 3 + cellSize / 2;
+                this.hero.posY =cellSize * 11 + cellSize / 2;
+                this.hero.speedX = 0;
+                this.hero.speedY = 0;
+                this.start();
+            }
+
+            if (!this.isPlay && this.level === this.levelTolal) {
+                this.map.drawMap();
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+                scoreboard.classList.remove("life");
+            }
+
+
+        }, timeOn + 4300);
     }
 }

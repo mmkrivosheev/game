@@ -40,38 +40,37 @@ btnSave.addEventListener("click", (e) => {
 });
 
 window.addEventListener("resize", () => {
-    game.map_1 = new Map();
+    game.map = new Map();
     game.hero = new Hero(
-        window.cellSize,
-        window.cellSize * 3 + window.cellSize / 2,
-        window.cellSize * 11 + window.cellSize / 2,
-        window.cellSize / 29
+        cellSize * 3 + cellSize / 2,
+        cellSize * 11 + cellSize / 2,
+        cellSize / 30
     );
 });
 
 export function setCssProperties() {
-    document.body.style.width = window.cvsWidth + window.cellSize + "px";
+    document.body.style.width = cvsWidth + cellSize + "px";
     header.style.marginTop = window.cvsBorder + "px";
     header.style.marginBottom = window.cvsBorder + "px";
-    scoreboard.style.fontSize = window.cellSize + "px";
-    scoreboard.style.width = window.cellSize * 9.5 + "px";
+    scoreboard.style.fontSize = cellSize + "px";
+    scoreboard.style.width = cellSize * 9.5 + "px";
     scoreboard.style.paddingLeft = window.cvsBorder + "px";
 
     for (let btn of btns) {
-        btn.style.fontSize = window.cellSize / 1.6 + "px";
-        btn.style.padding = window.cellSize / 6 + "px";
-        btn.style.textShadow = "0 0 " + window.cvsBorder / 7 + "px #464b51";
+        btn.style.fontSize = cellSize / 1.6 + "px";
+        btn.style.padding = cellSize / 6 + "px";
+        btn.style.textShadow = "0 0 " + cvsBorder / 7 + "px #464b51";
     }
 
     if (mq.matches)
         document.body.style.width = "100%";
     else
-        document.body.style.width = window.cvsWidth + window.cellSize + "px";
+        document.body.style.width = cvsWidth + cellSize + "px";
 
     mq.addListener((mq) => {
         if (mq.matches)
             document.body.style.width = "100%";
         else
-            document.body.style.width = window.cvsWidth + window.cellSize + "px";
+            document.body.style.width = cvsWidth + cellSize + "px";
     });
 }
