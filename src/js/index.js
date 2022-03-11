@@ -1,78 +1,77 @@
 import { Map } from "./map";
 import { Hero } from "./hero";
-import { HeroMapBorderRightCollisionDetector} from "./collisions";
-import { HeroMapBorderLeftCollisionDetector } from "./collisions";
-import { HeroMapBorderBottomCollisionDetector } from "./collisions";
-import { HeroMapBorderTopCollisionDetector } from "./collisions";
-import { HeroStaticBodyCollisionDetector } from "./collisions";
+import { Game } from "./game";
 import "../scss/index.scss";
 
-class Game {
-    constructor() {
-        this.map_1 = new Map();
-        this.hero = new Hero(
-            this.map_1.cellHeight,
-            this.map_1.cellHeight * 3 + this.map_1.cellHeight / 2,
-            this.map_1.cellHeight * 11 + this.map_1.cellHeight / 2,
-            this.map_1.cellHeight / 15
-        );
-        this.heroMapBorderRightCollisionDetector = new HeroMapBorderRightCollisionDetector();
-        this.heroMapBorderLeftCollisionDetector = new HeroMapBorderLeftCollisionDetector();
-        this.heroMapBorderBottomCollisionDetector = new HeroMapBorderBottomCollisionDetector();
-        this.heroMapBorderTopCollisionDetector = new HeroMapBorderTopCollisionDetector();
-        this.heroStaticBodyCollisionDetector = new HeroStaticBodyCollisionDetector();
-    }
-
-    start() {
-        document.addEventListener("keydown", (e) => this.hero.moveHero(e));
-        this.tick();
-    }
-
-    tick() {
-        this.hero.posX += this.hero.speedX;
-        this.hero.posY += this.hero.speedY;
-
-        if (this.heroMapBorderRightCollisionDetector.detector(this.hero, this.map_1))
-            this.hero.posX = this.map_1.cvsWidth - this.hero.size / 2;
-
-        if (this.heroMapBorderLeftCollisionDetector.detector(this.hero))
-            this.hero.posX = this.hero.size / 2;
-
-        if (this.heroMapBorderBottomCollisionDetector.detector(this.hero, this.map_1))
-            this.hero.posY = this.map_1.cvsHeight - this.hero.size / 2;
-
-        if (this.heroMapBorderTopCollisionDetector.detector(this.hero))
-            this.hero.posY = this.hero.size / 2;
-
-        this.heroStaticBodyCollisionDetector.detector(this.hero, this.map_1).forEach(([x, y]) => {
-
-            if (this.hero.speedX) {
-                this.hero.posX = this.hero.speedX > 0
-                    ? this.map_1.cellHeight * x - this.map_1.cellHeight / 2
-                    : this.map_1.cellHeight * x + this.map_1.cellHeight * 1.5;
-            }
-
-            if (this.hero.speedY) {
-                this.hero.posY = this.hero.speedY > 0
-                    ? this.map_1.cellHeight * y - this.map_1.cellHeight / 2
-                    : this.map_1.cellHeight * y + this.map_1.cellHeight * 1.5;
-            }
-        });
-
-        this.map_1.drawMap();
-        this.hero.drawHero();
-        requestAnimationFrame(this.tick.bind(this));
-    }
-}
+const header = document.querySelector(".header");
+const scoreboard = document.querySelector(".scoreboard");
+const btns = document.querySelectorAll(".btn");
+const btnPause = document.querySelector("#btn-pause");
+const btnSound = document.querySelector("#btn-sound");
+const btnMenu = document.querySelector("#btn-menu");
+const btnSave = document.querySelector("#btn-save");
+const mq = window.matchMedia('(max-width: 1199px)');
 
 const game = new Game();
 game.start();
 
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Control") game.pause();
+});
 
+btnPause.addEventListener("click", (e) => {
+    btnPause.blur();
+    game.pause(false);
+});
 
+btnSound.addEventListener("click", (e) => {
+    btnSound.blur();
+    game.soundOn();
+});
 
+btnMenu.addEventListener("click", (e) => {
+    btnMenu.blur();
+    game.menu();
+});
 
+btnSave.addEventListener("click", (e) => {
+    btnSave.blur();
+    game.save();
+});
 
+window.addEventListener("resize", () => {
+    game.map_1 = new Map();
+    game.hero = new Hero(
+        window.cellSize,
+        window.cellSize * 3 + window.cellSize / 2,
+        window.cellSize * 11 + window.cellSize / 2,
+        window.cellSize / 29
+    );
+});
 
+export function setCssProperties() {
+    document.body.style.width = window.cvsWidth + window.cellSize + "px";
+    header.style.marginTop = window.cvsBorder + "px";
+    header.style.marginBottom = window.cvsBorder + "px";
+    scoreboard.style.fontSize = window.cellSize + "px";
+    scoreboard.style.width = window.cellSize * 9.5 + "px";
+    scoreboard.style.paddingLeft = window.cvsBorder + "px";
 
+    for (let btn of btns) {
+        btn.style.fontSize = window.cellSize / 1.6 + "px";
+        btn.style.padding = window.cellSize / 6 + "px";
+        btn.style.textShadow = "0 0 " + window.cvsBorder / 7 + "px #464b51";
+    }
 
+    if (mq.matches)
+        document.body.style.width = "100%";
+    else
+        document.body.style.width = window.cvsWidth + window.cellSize + "px";
+
+    mq.addListener((mq) => {
+        if (mq.matches)
+            document.body.style.width = "100%";
+        else
+            document.body.style.width = window.cvsWidth + window.cellSize + "px";
+    });
+}

@@ -9,20 +9,17 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="progress">
-			<p class="level-coin">L-1 : 0</p>
-			<button type="button" class="btn">PAUSE</button>
-			<button type="button" class="btn">SOUND</button>
-			<button type="button" class="btn">MENU</button>
-			<button type="button" class="btn">SAVE</button>
-			<div class="lives">
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
+		<div class="header">
+			<p class="scoreboard life" data-life="4"></p>
+			<button type="button" id="btn-pause" class="btn">PAUSE</button>
+			<button type="button" id="btn-sound" class="btn">SOUND</button>
+			<button type="button" id="btn-menu" class="btn">MENU</button>
+			<button type="button" id="btn-save" class="btn">SAVE</button>
 		</div>
-		<canvas id="cvs"></canvas>
+		<div class="body">
+			<canvas id="cvs"></canvas>
+			<p class="message" id="message"></p>
+		</div>
 	</div>
 </body>
 </html>

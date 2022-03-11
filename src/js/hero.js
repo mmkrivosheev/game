@@ -6,6 +6,7 @@ export class Hero {
         this.speedX = 0;
         this.speedY = 0;
         this.size = size;
+        this.isPause = false;
     }
 
     drawHero() {
@@ -18,24 +19,27 @@ export class Hero {
 
     moveHero(e) {
         e.preventDefault();
-        if (e.key === "ArrowLeft") {
-            this.speedY = 0;
-            this.speedX = -this.speed;
-        }
 
-        if (e.key === "ArrowRight") {
-            this.speedY = 0;
-            this.speedX = +this.speed;
-        }
+        if (!this.isPause) {
+            if (e.key === "ArrowLeft") {
+                this.speedY = 0;
+                this.speedX = -this.speed;
+            }
 
-        if (e.key === "ArrowUp") {
-            this.speedX = 0;
-            this.speedY = -this.speed;
-        }
+            if (e.key === "ArrowRight") {
+                this.speedY = 0;
+                this.speedX = +this.speed;
+            }
 
-        if (e.key === "ArrowDown") {
-            this.speedX = 0;
-            this.speedY = +this.speed;
+            if (e.key === "ArrowUp") {
+                this.speedX = 0;
+                this.speedY = -this.speed;
+            }
+
+            if (e.key === "ArrowDown") {
+                this.speedX = 0;
+                this.speedY = +this.speed;
+            }
         }
     }
 }

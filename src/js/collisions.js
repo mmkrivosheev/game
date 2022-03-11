@@ -29,8 +29,8 @@ export class HeroStaticBodyCollisionDetector {
         for (let y = 0; y < map.map.length; y++) {
             for (let x = 0; x < map.map[y].length; x++) {
                 if (map.map[y][x] === 1 &&
-                    checkOverlappingX(hero, map, x) &&
-                    checkOverlappingY(hero, map, y)) {
+                    this.checkOverlappingX(hero, map, x) &&
+                    this.checkOverlappingY(hero, map, y)) {
                     result.push([x, y]);
                 }
             }
@@ -38,12 +38,38 @@ export class HeroStaticBodyCollisionDetector {
 
         return result;
     }
+
+    checkOverlappingX(hero, map, cellX) {
+        return Math.abs((map.cellSize * cellX + map.cellSize / 2) - hero.posX) < map.cellSize;
+    }
+
+    checkOverlappingY(hero, map, cellY) {
+        return Math.abs((map.cellSize * cellY + map.cellSize / 2) - hero.posY) < map.cellSize;
+    }
 }
 
-function checkOverlappingX(hero, map, cellX) {
-    return Math.abs((map.cellHeight * cellX + map.cellHeight / 2) - hero.posX) < map.cellHeight;
-}
+export class HeroGrainCollisionDetector {
+    detector(hero, map) {
+        const result = [];
 
-function checkOverlappingY(hero, map, cellY) {
-    return Math.abs((map.cellHeight * cellY + map.cellHeight / 2) - hero.posY) < map.cellHeight;
+        for (let y = 0; y < map.map.length; y++) {
+            for (let x = 0; x < map.map[y].length; x++) {
+                if (map.map[y][x] === 2 &&
+                    this.checkOverlappingX(hero, map, x) &&
+                    this.checkOverlappingY(hero, map, y)) {
+                    result.push([x, y]);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    checkOverlappingX(hero, map, cellX) {
+        return Math.abs((map.cellSize * cellX + map.cellSize / 2) - hero.posX) < hero.size / 2;
+    }
+
+    checkOverlappingY(hero, map, cellY) {
+        return Math.abs((map.cellSize * cellY + map.cellSize / 2) - hero.posY) < hero.size / 2;
+    }
 }
