@@ -36,6 +36,7 @@ export class Game {
         this.levelTolal = this.map.maps.length;
         this.coins = 0;
         this.coinsTotal = 0;
+        this.life = 4;
         this.isPlay = true;
         this.isPause = false;
         this.isSound = false;
@@ -96,11 +97,14 @@ export class Game {
         }
 
         if (this.isPause) {
+            this.hero.speedX = 0;
+            this.hero.speedY = 0;
             scoreboard.innerHTML = PAUSE;
             this.hero.isPause = true;
         } else {
             this.tick();
             this.hero.isPause = false;
+
         }
     }
 
@@ -117,6 +121,7 @@ export class Game {
 
         if (this.isMenu) {
             scoreboard.innerHTML = MENU;
+            this.map.drawMap();
             this.hero.isPause = true;
         } else {
             if (!this.isPlay && this.level !== this.levelTolal)
@@ -125,6 +130,8 @@ export class Game {
             if (!this.isPlay && this.level === this.levelTolal)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
+            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.hero.drawHero();
             this.pause(true);
         }
     }
@@ -136,6 +143,7 @@ export class Game {
 
         if (this.isSave) {
             scoreboard.innerHTML = SAVE;
+            this.map.drawMap();
             this.hero.isPause = true;
         } else {
             if (!this.isPlay && this.level !== this.levelTolal)
@@ -144,6 +152,8 @@ export class Game {
             if (!this.isPlay && this.level === this.levelTolal)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
+            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.hero.drawHero();
             this.pause(true);
         }
     }
@@ -196,6 +206,7 @@ export class Game {
                 this.hero.speedY = 0;
             }
         });
+
         new HeroCoinCollisionDetector()
             .detector(this.hero, this.map.maps[this.level - 1]).forEach(([x, y]) => {
             if (this.isSound) musicCoin.play();
@@ -207,8 +218,8 @@ export class Game {
         this.map.drawMap(this.map.maps[this.level - 1]);
         this.hero.drawHero();
 
-        // if (this.coins === this.map.coinsTotal) {
-        if (this.coins === 4) {
+        if (this.coins === this.map.coinsTotal) {
+        // if (this.coins === 4) {
             this.showAndHideMessage(WON, musicWin, 300);
             this.coinsTotal += this.coins;
             this.coins = 0;
@@ -249,7 +260,7 @@ export class Game {
             }
 
             if (!this.isPlay && this.level === this.levelTolal) {
-                this.map.drawMap();
+                // this.map.drawMap();
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
                 scoreboard.classList.remove("life");
             }

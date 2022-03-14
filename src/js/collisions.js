@@ -25,15 +25,31 @@ export class HeroMapBorderTopCollisionDetector {
 export class HeroStaticBodyCollisionDetector {
     detector(hero, map) {
         const result = [];
+        const heroCellX = Math.floor(hero.posX / cellSize);
+        const heroCellY = Math.floor(hero.posY / cellSize);
+        const CellsAroundHero = [
+            [heroCellY - 1, heroCellX - 1],
+            [heroCellY - 1, heroCellX],
+            [heroCellY - 1, heroCellX + 1],
+            [heroCellY, heroCellX - 1],
+            [heroCellY, heroCellX],
+            [heroCellY, heroCellX + 1],
+            [heroCellY + 1, heroCellX - 1],
+            [heroCellY + 1, heroCellX],
+            [heroCellY + 1, heroCellX + 1],
+        ];
 
-        for (let y = 0; y < map.length; y++) {
-            for (let x = 0; x < map[y].length; x++) {
-                if (map[y][x] === 1 &&
-                    this.checkOverlappingX(hero, x) &&
-                    this.checkOverlappingY(hero, y)) {
-                    result.push([x, y]);
-                }
-            }
+        for (let i = 0; i < CellsAroundHero.length; i++) {
+            if (CellsAroundHero[i][0] < 0 ||
+                CellsAroundHero[i][0] > map.length - 1 ||
+                CellsAroundHero[i][1] < 0 ||
+                CellsAroundHero[i][1] > map[0].length - 1)
+                continue;
+
+            if (map[CellsAroundHero[i][0]][CellsAroundHero[i][1]] === 1 &&
+                this.checkOverlappingX(hero, CellsAroundHero[i][1]) &&
+                this.checkOverlappingY(hero, CellsAroundHero[i][0]))
+                    result.push([CellsAroundHero[i][1], CellsAroundHero[i][0]]);
         }
 
         return result;
@@ -51,15 +67,31 @@ export class HeroStaticBodyCollisionDetector {
 export class HeroCoinCollisionDetector {
     detector(hero, map) {
         const result = [];
+        const heroCellX = Math.floor(hero.posX / cellSize);
+        const heroCellY = Math.floor(hero.posY / cellSize);
+        const CellsAroundHero = [
+            [heroCellY - 1, heroCellX - 1],
+            [heroCellY - 1, heroCellX],
+            [heroCellY - 1, heroCellX + 1],
+            [heroCellY, heroCellX - 1],
+            [heroCellY, heroCellX],
+            [heroCellY, heroCellX + 1],
+            [heroCellY + 1, heroCellX - 1],
+            [heroCellY + 1, heroCellX],
+            [heroCellY + 1, heroCellX + 1],
+        ];
 
-        for (let y = 0; y < map.length; y++) {
-            for (let x = 0; x < map[y].length; x++) {
-                if (map[y][x] === 2 &&
-                    this.checkOverlappingX(hero, x) &&
-                    this.checkOverlappingY(hero, y)) {
-                    result.push([x, y]);
-                }
-            }
+        for (let i = 0; i < CellsAroundHero.length; i++) {
+            if (CellsAroundHero[i][0] < 0 ||
+                CellsAroundHero[i][0] > map.length - 1 ||
+                CellsAroundHero[i][1] < 0 ||
+                CellsAroundHero[i][1] > map[0].length - 1)
+                continue;
+
+            if (map[CellsAroundHero[i][0]][CellsAroundHero[i][1]] === 2 &&
+                this.checkOverlappingX(hero, CellsAroundHero[i][1]) &&
+                this.checkOverlappingY(hero, CellsAroundHero[i][0]))
+                result.push([CellsAroundHero[i][1], CellsAroundHero[i][0]]);
         }
 
         return result;

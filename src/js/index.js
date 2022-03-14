@@ -3,8 +3,6 @@ import { Hero } from "./hero";
 import { Game } from "./game";
 import "../scss/index.scss";
 
-const header = document.querySelector(".header");
-const scoreboard = document.querySelector(".scoreboard");
 const btns = document.querySelectorAll(".btn");
 const btnPause = document.querySelector("#btn-pause");
 const btnSound = document.querySelector("#btn-sound");
@@ -14,6 +12,10 @@ const mq = window.matchMedia('(max-width: 1199px)');
 
 const game = new Game();
 game.start();
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.style.display = "flex";
+});
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "Control") game.pause();
@@ -49,16 +51,9 @@ window.addEventListener("resize", () => {
 });
 
 export function setCssProperties() {
-    document.body.style.width = cvsWidth + cellSize + "px";
-    header.style.marginTop = window.cvsBorder + "px";
-    header.style.marginBottom = window.cvsBorder + "px";
-    scoreboard.style.fontSize = cellSize + "px";
-    scoreboard.style.width = cellSize * 9.5 + "px";
-    scoreboard.style.paddingLeft = window.cvsBorder + "px";
+    document.body.style.fontSize = cellSize + "px";
 
     for (let btn of btns) {
-        btn.style.fontSize = cellSize / 1.6 + "px";
-        btn.style.padding = cellSize / 6 + "px";
         btn.style.textShadow = "0 0 " + cvsBorder / 7 + "px #464b51";
     }
 

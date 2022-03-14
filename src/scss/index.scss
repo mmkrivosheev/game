@@ -2,7 +2,6 @@
 
 html {
   font-family: 'Roboto', sans-serif;
-  font-size: 20px;
   font-weight: 500;
   line-height: 1.15;
   color: #464b51;
@@ -15,10 +14,11 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 0.1%;
   background-color: #606973;
   box-shadow: 0 0 2px 2px #464b51;
   transform: translate(-50%, -50%);
@@ -35,12 +35,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 1.2%;
+  margin-bottom: 1.2%;
 }
 
 .scoreboard {
   position: relative;
-  font-size: 20px;
+  font-size: 100%;
   font-weight: 700;
+  width: 48.5%;
+  padding-left: 1.2%;
   border: 0.5px solid #3c4f55;
   background-color: green;
   box-shadow: inset 0 0 3px #464b51, inset 0 0 20px #0f9a0f;
@@ -80,9 +84,11 @@ body {
 }
 
 .btn {
+  font-size: 62.5%;
   font-weight: 700;
   color:inherit;
   display: block;
+  padding: 0.85%;
   border: none;
   background-color: #7D848C;
   box-shadow: 0 0 2px 1px #3c4f55;
@@ -100,7 +106,7 @@ body {
   position: relative;
 }
 
-#cvs {
+.cvs {
   box-shadow: inset 0 0 2px #66757b, 0 0 2px #545a5e;
   background-color: #778899;
 }
@@ -112,12 +118,12 @@ body {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
   padding: 5%;
   background-color: #DAD0D0;
   border-radius: 0.5%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
   animation-name: modal;
   animation-duration: 4s;
   animation-timing-function: ease-out;
@@ -169,5 +175,6 @@ body {
     opacity: 0;
     height: 0;
     width: 0;
+    padding: 0;
   }
 }
