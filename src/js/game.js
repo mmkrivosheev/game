@@ -1,12 +1,7 @@
 import { Map } from "./map";
 import { Hero } from "./hero";
+import { Antihero } from "./antihero";
 import { setCssProperties } from "./index";
-import { HeroMapBorderRightCollisionDetector} from "./collisions";
-import { HeroMapBorderLeftCollisionDetector } from "./collisions";
-import { HeroMapBorderBottomCollisionDetector } from "./collisions";
-import { HeroMapBorderTopCollisionDetector } from "./collisions";
-import { HeroStaticBodyCollisionDetector } from "./collisions";
-import { HeroCoinCollisionDetector } from "./collisions";
 
 const PAUSE = "PAUSE";
 const MENU = "MENU";
@@ -15,41 +10,44 @@ const LEVEL = "LEVEL ";
 const WON = "YOU WON !";
 const VICTORY = "VICTORY !";
 const GAME_OVER = "GAME OVER !";
-const musicCoin = new Audio();
 const musicWin = new Audio();
-const message = document.querySelector("#message");
+const modal = document.querySelector("#modal");
 const scoreboard = document.querySelector(".scoreboard");
-musicCoin.preload = 'auto';
 musicWin.preload = 'auto';
-musicCoin.src = "src/audio/coin.mp3";
 musicWin.src = "src/audio/win.mp3";
 
 export class Game {
+
     constructor() {
-        this.map = new Map();
-        this.hero = new Hero(
-            cellSize * 3 + cellSize / 2,
-            cellSize * 11 + cellSize / 2,
-            cellSize / 35
-        );
-        this.level = 0;
+        this.heroSpeed = 35;
+        this.antiheroSpeed = 30;
+        this.map = new Map(this);
+        this.hero = new Hero(this, 3, 11, this.heroSpeed);
+        this.antihero_1 = new Antihero(this, 0, 0, this.antiheroSpeed);
+        this.antihero_2 = new Antihero(this, 18, 0, this.antiheroSpeed);
+        this.antihero_3 = new Antihero(this, 18, 19, this.antiheroSpeed);
+        this.antihero_4 = new Antihero(this, 0, 19, this.antiheroSpeed);
         this.levelTolal = this.map.maps.length;
-        this.coins = 0;
         this.coinsTotal = 0;
+        this.level = 0;
+        this.coins = 0;
         this.life = 4;
         this.isPlay = true;
         this.isPause = false;
         this.isSound = false;
         this.isMenu = false;
         this.isSave = false;
-
     }
 
     start() {
         this.level++;
         setCssProperties();
-        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.map.drawMap();
         this.hero.drawHero();
+        this.antihero_1.drawAntihero();
+        this.antihero_2.drawAntihero();
+        this.antihero_3.drawAntihero();
+        this.antihero_4.drawAntihero();
         this.hero.isPause = true;
         this.map.getCoinsTotal(this.map.maps[this.level - 1]);
         this.isSound
@@ -59,33 +57,6 @@ export class Game {
         this.showAndHideMessage(LEVEL + this.level, null, 300);
         window.addEventListener("resize", setCssProperties);
         document.addEventListener("keydown", (e) => this.hero.moveHero(e));
-    }
-
-    pass() {
-        const heroCellX = Math.floor(this.hero.posX / cellSize);
-        const heroCellY = Math.floor(this.hero.posY / cellSize);
-
-        if (this.hero.speedX > 0 &&
-            heroCellX < this.map.maps[this.level - 1][0].length - 1 &&
-            this.map.maps[this.level - 1][heroCellY][heroCellX + 1] !== 1)
-            this.hero.posY = heroCellY * cellSize + cellSize / 2;
-
-        if (this.hero.speedX < 0 &&
-            heroCellX > 0 &&
-            this.map.maps[this.level - 1][heroCellY][heroCellX - 1] !== 1)
-            this.hero.posY = heroCellY * cellSize + cellSize / 2;
-
-        if (this.hero.speedY > 0 &&
-            heroCellY < this.map.maps[this.level - 1].length - 1 &&
-            this.map.maps[this.level - 1][heroCellY < this.map.maps[this.level - 1].length - 1
-                ? heroCellY + 1
-                : heroCellY][heroCellX] !== 1)
-            this.hero.posX = heroCellX * cellSize + cellSize / 2;
-
-        if (this.hero.speedY < 0 &&
-            heroCellY > 0 &&
-            this.map.maps[this.level - 1][heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
-            this.hero.posX = heroCellX * cellSize + cellSize / 2;
     }
 
     pause(boolean) {
@@ -104,7 +75,6 @@ export class Game {
         } else {
             this.tick();
             this.hero.isPause = false;
-
         }
     }
 
@@ -159,64 +129,40 @@ export class Game {
     }
 
     tick() {
-        if (!this.isPlay) return;
-        if (this.isPause) return;
-        if (this.isMenu) return;
-        if (this.isSave) return;
+        if (!this.isPlay || this.isPause || this.isMenu || this.isSave) return;
 
-        this.pass();
+        this.hero.passBetweenBodies();
+        this.antihero_1.passBetweenBodies();
+        this.antihero_2.passBetweenBodies();
+        this.antihero_3.passBetweenBodies();
+        this.antihero_4.passBetweenBodies();
 
-        this.hero.posX += this.hero.speedX;
-        this.hero.posY += this.hero.speedY;
+        this.hero.calcNewPos();
+        this.antihero_1.calcNewPos();
+        this.antihero_2.calcNewPos();
+        this.antihero_3.calcNewPos();
+        this.antihero_4.calcNewPos();
 
-        if (new HeroMapBorderRightCollisionDetector().detector(this.hero)) {
-            this.hero.posX = cvsWidth - this.hero.size / 2;
-            this.hero.speedX = 0;
-        }
+        this.hero.collision.mapBorderDetector();
+        this.hero.collision.staticBodyDetector();
+        this.hero.collision.coinDetector();
 
-        if (new HeroMapBorderLeftCollisionDetector().detector(this.hero)) {
-            this.hero.posX = this.hero.size / 2;
-            this.hero.speedX = 0;
-        }
-
-        if (new HeroMapBorderBottomCollisionDetector().detector(this.hero)) {
-            this.hero.posY = cvsHeight - this.hero.size / 2;
-            this.hero.speedY = 0;
-        }
-
-        if (new HeroMapBorderTopCollisionDetector().detector(this.hero)) {
-            this.hero.posY = this.hero.size / 2;
-            this.hero.speedY = 0;
-        }
-
-        new HeroStaticBodyCollisionDetector()
-            .detector(this.hero, this.map.maps[this.level - 1]).forEach(([x, y]) => {
-
-            if (this.hero.speedX) {
-                this.hero.posX = this.hero.speedX > 0
-                    ? cellSize * x - cellSize / 2
-                    : cellSize * x + cellSize * 1.5;
-                this.hero.speedX = 0;
-            }
-
-            if (this.hero.speedY) {
-                this.hero.posY = this.hero.speedY > 0
-                    ? cellSize * y - cellSize / 2
-                    : cellSize * y + cellSize * 1.5;
-                this.hero.speedY = 0;
-            }
-        });
-
-        new HeroCoinCollisionDetector()
-            .detector(this.hero, this.map.maps[this.level - 1]).forEach(([x, y]) => {
-            if (this.isSound) musicCoin.play();
-            this.map.maps[this.level - 1][y][x] = 0;
-            this.coins++;
-        });
+        this.hero.getReactionToMapBorderCollision();
+        this.hero.getReactionToStaticBodyCollision();
+        this.hero.getReactionToCoinCollision();
 
         scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
-        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.map.drawMap();
         this.hero.drawHero();
+        this.antihero_1.drawAntihero();
+        this.antihero_2.drawAntihero();
+        this.antihero_3.drawAntihero();
+        this.antihero_4.drawAntihero();
+
+        this.antihero_1.moveAntihero();
+        this.antihero_2.moveAntihero();
+        this.antihero_3.moveAntihero();
+        this.antihero_4.moveAntihero();
 
         if (this.coins === this.map.coinsTotal) {
         // if (this.coins === 4) {
@@ -236,14 +182,14 @@ export class Game {
     showAndHideMessage(text, music, timeOn) {
         setTimeout(() => {
             if (this.isSound && music) music.play();
-            message.innerHTML = text;
-            message.classList.add("show-message");
+            modal.innerHTML = text;
+            modal.classList.add("show-modal");
 
         }, timeOn);
 
         setTimeout(() => {
-            message.innerHTML = "";
-            message.classList.remove("show-message");
+            modal.innerHTML = "";
+            modal.classList.remove("show-modal");
 
             if (this.isPlay) {
                 this.hero.isPause = false;

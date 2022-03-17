@@ -1,107 +1,57 @@
-export class HeroMapBorderRightCollisionDetector {
-    detector(hero) {
-        return hero.posX + hero.size / 2 > cvsWidth;
-    }
-}
+export class CollisionDetector {
 
-export class HeroMapBorderLeftCollisionDetector {
-    detector(hero) {
-        return hero.posX - hero.size / 2 < 0;
+    constructor(player) {
+        this.player = player;
     }
-}
 
-export class HeroMapBorderBottomCollisionDetector {
-    detector(hero) {
-        return hero.posY + hero.size / 2 > cvsHeight;
+    mapBorderDetector() {
+        if (this.player.posX + this.player.size / 2 > cvsWidth)
+            this.player.isMapBorderRightCollision = true;
+
+        if (this.player.posX - this.player.size / 2 < 0)
+            this.player.isMapBorderLeftCollision = true;
+
+        if (this.player.posY + this.player.size / 2 > cvsHeight)
+            this.player.isMapBorderButtonCollision = true;
+
+        if (this.player.posY - this.player.size / 2 < 0)
+            this.player.isMapBorderTopCollision = true;
     }
-}
 
-export class HeroMapBorderTopCollisionDetector {
-    detector(hero) {
-        return hero.posY - hero.size / 2 < 0;
-    }
-}
-
-export class HeroStaticBodyCollisionDetector {
-    detector(hero, map) {
+    staticBodyDetector() {
         const result = [];
-        const heroCellX = Math.floor(hero.posX / cellSize);
-        const heroCellY = Math.floor(hero.posY / cellSize);
+        const playerCellX = Math.floor(this.player.posX / cellSize);
+        const playerCellY = Math.floor(this.player.posY / cellSize);
         const CellsAroundHero = [
-            [heroCellY - 1, heroCellX - 1],
-            [heroCellY - 1, heroCellX],
-            [heroCellY - 1, heroCellX + 1],
-            [heroCellY, heroCellX - 1],
-            [heroCellY, heroCellX],
-            [heroCellY, heroCellX + 1],
-            [heroCellY + 1, heroCellX - 1],
-            [heroCellY + 1, heroCellX],
-            [heroCellY + 1, heroCellX + 1],
+            [playerCellY - 1, playerCellX],
+            [playerCellY, playerCellX - 1],
+            [playerCellY, playerCellX + 1],
+            [playerCellY + 1, playerCellX]
         ];
 
-        for (let i = 0; i < CellsAroundHero.length; i++) {
-            if (CellsAroundHero[i][0] < 0 ||
-                CellsAroundHero[i][0] > map.length - 1 ||
-                CellsAroundHero[i][1] < 0 ||
-                CellsAroundHero[i][1] > map[0].length - 1)
-                continue;
-
-            if (map[CellsAroundHero[i][0]][CellsAroundHero[i][1]] === 1 &&
-                this.checkOverlappingX(hero, CellsAroundHero[i][1]) &&
-                this.checkOverlappingY(hero, CellsAroundHero[i][0]))
-                    result.push([CellsAroundHero[i][1], CellsAroundHero[i][0]]);
+        for (let [y, x] of CellsAroundHero) {
+            if (this.player.parent.map.maps[this.player.parent.level - 1][y]?.[x] === 1 &&
+                checkOverlappingX(this.player, x) &&
+                checkOverlappingY(this.player, y))
+                result.push([x, y]);
         }
 
-        return result;
-    }
+        this.player.staticBodyCollision = result;
 
-    checkOverlappingX(hero, cellX) {
-        return Math.abs((cellSize * cellX + cellSize / 2) - hero.posX) < cellSize;
-    }
-
-    checkOverlappingY(hero, cellY) {
-        return Math.abs((cellSize * cellY + cellSize / 2) - hero.posY) < cellSize;
-    }
-}
-
-export class HeroCoinCollisionDetector {
-    detector(hero, map) {
-        const result = [];
-        const heroCellX = Math.floor(hero.posX / cellSize);
-        const heroCellY = Math.floor(hero.posY / cellSize);
-        const CellsAroundHero = [
-            [heroCellY - 1, heroCellX - 1],
-            [heroCellY - 1, heroCellX],
-            [heroCellY - 1, heroCellX + 1],
-            [heroCellY, heroCellX - 1],
-            [heroCellY, heroCellX],
-            [heroCellY, heroCellX + 1],
-            [heroCellY + 1, heroCellX - 1],
-            [heroCellY + 1, heroCellX],
-            [heroCellY + 1, heroCellX + 1],
-        ];
-
-        for (let i = 0; i < CellsAroundHero.length; i++) {
-            if (CellsAroundHero[i][0] < 0 ||
-                CellsAroundHero[i][0] > map.length - 1 ||
-                CellsAroundHero[i][1] < 0 ||
-                CellsAroundHero[i][1] > map[0].length - 1)
-                continue;
-
-            if (map[CellsAroundHero[i][0]][CellsAroundHero[i][1]] === 2 &&
-                this.checkOverlappingX(hero, CellsAroundHero[i][1]) &&
-                this.checkOverlappingY(hero, CellsAroundHero[i][0]))
-                result.push([CellsAroundHero[i][1], CellsAroundHero[i][0]]);
+        function checkOverlappingX(hero, cellX) {
+            return Math.abs((cellSize * cellX + cellSize / 2) - hero.posX) < cellSize;
         }
 
-        return result;
+        function  checkOverlappingY(hero, cellY) {
+            return Math.abs((cellSize * cellY + cellSize / 2) - hero.posY) < cellSize;
+        }
     }
 
-    checkOverlappingX(hero, cellX) {
-        return Math.abs((cellSize * cellX + cellSize / 2) - hero.posX) < hero.size / 2;
-    }
+    coinDetector() {
+        const playerCellX = Math.floor(this.player.posX / cellSize);
+        const playerCellY = Math.floor(this.player.posY / cellSize);
 
-    checkOverlappingY(hero, cellY) {
-        return Math.abs((cellSize * cellY + cellSize / 2) - hero.posY) < hero.size / 2;
+        if (this.player.parent.map.maps[this.player.parent.level - 1][playerCellY][playerCellX] === 2)
+            this.player.coinCollision = [playerCellX, playerCellY];
     }
 }

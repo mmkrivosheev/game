@@ -1,6 +1,7 @@
+import { Game } from "./game";
 import { Map } from "./map";
 import { Hero } from "./hero";
-import { Game } from "./game";
+import {Antihero} from "./antihero";
 import "../scss/index.scss";
 
 const btns = document.querySelectorAll(".btn");
@@ -42,12 +43,13 @@ btnSave.addEventListener("click", (e) => {
 });
 
 window.addEventListener("resize", () => {
-    game.map = new Map();
-    game.hero = new Hero(
-        cellSize * 3 + cellSize / 2,
-        cellSize * 11 + cellSize / 2,
-        cellSize / 30
-    );
+    game.map = new Map(this);
+    game.hero = new Hero(this, 3, 11, game.heroSpeed);
+    game.antihero_1 = new Antihero(this, 0, 0, game.antiheroSpeed);
+    game.antihero_2 = new Antihero(this, 18, 0, game.antiheroSpeed);
+    game.antihero_3 = new Antihero(this, 18, 19, game.antiheroSpeed);
+    game.antihero_4 = new Antihero(this, 0, 19, game.antiheroSpeed);
+
 });
 
 export function setCssProperties() {

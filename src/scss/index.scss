@@ -111,7 +111,7 @@ body {
   background-color: #778899;
 }
 
-.message {
+.modal {
   font-weight: 700;
   display: none;
   text-align: center;
@@ -130,7 +130,7 @@ body {
   animation-fill-mode: forwards;
 }
 
-.show-message {
+.show-modal {
   display: flex;
 }
 
