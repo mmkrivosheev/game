@@ -1,4 +1,11 @@
-@import 'reset';
+@import "reset";
+@import "scoreboard";
+@import "btnMain";
+@import "btnMenu";
+@import "btnSave";
+@import "cvs";
+@import "rules";
+@import "modal";
 
 html {
   font-family: 'Roboto', sans-serif;
@@ -39,142 +46,6 @@ body {
   margin-bottom: 1.2%;
 }
 
-.scoreboard {
-  position: relative;
-  font-size: 100%;
-  font-weight: 700;
-  width: 48.5%;
-  padding-left: 1.2%;
-  border: 0.5px solid #3c4f55;
-  background-color: green;
-  box-shadow: inset 0 0 3px #464b51, inset 0 0 20px #0f9a0f;
-}
-
-.life::before {
-  content: attr(data-life);
-  position: absolute;
-  top: 0;
-  right: 15%;
-}
-
-.sound-on::after {
-  content: url("/src/img/sound.svg");
-  position: absolute;
-  top: 0;
-  right: 3%;
-  width: 5%;
-  height: 5%;
-  transform: translateY(25%);
-  @media (max-width: 1199px) {
-    transform: translateY(180%);
-  }
-}
-
-.sound-off::after {
-  content: url("/src/img/sound-off.svg");
-  position: absolute;
-  top: 0;
-  right: 2%;
-  height: 9%;
-  width: 9%;
-  transform: translateY(25%);
-  @media (max-width: 1199px) {
-    transform: translateY(100%);
-  }
-}
-
-.btn {
-  font-size: 62.5%;
-  font-weight: 700;
-  color:inherit;
-  display: block;
-  padding: 0.85%;
-  border: none;
-  background-color: #7D848C;
-  box-shadow: 0 0 2px 1px #3c4f55;
-}
-
-.btn:hover {
-  cursor: pointer;
-}
-
-.btn:active {
-  box-shadow: inset 0 0 3px #464b51, 0 0 2px 1px #464b51;
-}
-
 .main {
   position: relative;
-}
-
-.cvs {
-  box-shadow: inset 0 0 2px #66757b, 0 0 2px #545a5e;
-  background-color: #778899;
-}
-
-.modal {
-  font-weight: 700;
-  display: none;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 47%;
-  left: 50%;
-  padding: 5%;
-  background-color: #DAD0D0;
-  border-radius: 0.5%;
-  transform: translate3d(-50%, -50%, 0);
-  animation-name: modal;
-  animation-duration: 4s;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-}
-
-.show-modal {
-  display: flex;
-}
-
-@keyframes modal {
-  0% {
-    font-size: 0;
-    color: #DAD0D0;
-    opacity: 0;
-    height: 0;
-    width: 0;
-  }
-
-  10% {
-    font-size: 0;
-    color: #778899;
-    opacity: 0.8;
-    height: 15%;
-    width: 55%;
-    box-shadow: 0 0 5px 2px #606973;
-  }
-
-  20% {
-    font-size: 6vmin;
-    color: #778899;
-    opacity: 1;
-    height: 40%;
-    width: 60%;
-  }
-
-  80% {
-    font-size: 6vmin;
-    color: #778899;
-    opacity: 1;
-    height: 40%;
-    width: 60%;
-    box-shadow: 0 0 5px 2px #606973;
-  }
-
-  100% {
-    font-size: 0;
-    color:  #DAD0D0;
-    opacity: 0;
-    height: 0;
-    width: 0;
-    padding: 0;
-  }
 }

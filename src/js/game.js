@@ -16,6 +16,10 @@ const scoreboard = document.querySelector(".scoreboard");
 musicWin.preload = 'auto';
 musicWin.src = "src/audio/win.mp3";
 
+const musicGameOver = new Audio();
+musicGameOver.preload = 'auto';
+musicGameOver.src = "src/audio/lose.mp3";
+
 export class Game {
 
     constructor() {
@@ -28,7 +32,7 @@ export class Game {
         this.antihero_3 = new Antihero(this, 18, 19, this.antiheroSpeed);
         this.antihero_4 = new Antihero(this, 0, 19, this.antiheroSpeed);
         this.levelTolal = this.map.maps.length;
-        this.coinsTotal = 0;
+        this.coinsTotal = null;
         this.level = 0;
         this.coins = 0;
         this.life = 4;
@@ -42,7 +46,7 @@ export class Game {
     start() {
         this.level++;
         setCssProperties();
-        this.map.drawMap();
+        this.map.drawMap(this.map.maps[this.level - 1]);
         this.hero.drawHero();
         this.antihero_1.drawAntihero();
         this.antihero_2.drawAntihero();
@@ -102,7 +106,11 @@ export class Game {
 
             this.map.drawMap(this.map.maps[this.level - 1]);
             this.hero.drawHero();
-            this.pause(true);
+            this.antihero_1.drawAntihero();
+            this.antihero_2.drawAntihero();
+            this.antihero_3.drawAntihero();
+            this.antihero_4.drawAntihero();
+            // this.pause(true);
         }
     }
 
@@ -124,12 +132,17 @@ export class Game {
 
             this.map.drawMap(this.map.maps[this.level - 1]);
             this.hero.drawHero();
+            this.antihero_1.drawAntihero();
+            this.antihero_2.drawAntihero();
+            this.antihero_3.drawAntihero();
+            this.antihero_4.drawAntihero();
             this.pause(true);
         }
     }
 
     tick() {
-        if (!this.isPlay || this.isPause || this.isMenu || this.isSave) return;
+        // if (!this.isPlay || this.isPause || this.isMenu || this.isSave) return;
+        if (!this.isPlay || this.isPause || this.isSave) return;
 
         this.hero.passBetweenBodies();
         this.antihero_1.passBetweenBodies();
@@ -146,23 +159,35 @@ export class Game {
         this.hero.collision.mapBorderDetector();
         this.hero.collision.staticBodyDetector();
         this.hero.collision.coinDetector();
+        this.hero.collision.antiheroDetector(this.antihero_1);
+        this.hero.collision.antiheroDetector(this.antihero_2);
+        this.hero.collision.antiheroDetector(this.antihero_3);
+        this.hero.collision.antiheroDetector(this.antihero_4);
 
         this.hero.getReactionToMapBorderCollision();
         this.hero.getReactionToStaticBodyCollision();
         this.hero.getReactionToCoinCollision();
 
-        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
-        this.map.drawMap();
-        this.hero.drawHero();
-        this.antihero_1.drawAntihero();
-        this.antihero_2.drawAntihero();
-        this.antihero_3.drawAntihero();
-        this.antihero_4.drawAntihero();
+        if (!this.isMenu) {
+            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.hero.drawHero();
+            this.antihero_1.drawAntihero();
+            this.antihero_2.drawAntihero();
+            this.antihero_3.drawAntihero();
+            this.antihero_4.drawAntihero();
+        }
 
         this.antihero_1.moveAntihero();
         this.antihero_2.moveAntihero();
         this.antihero_3.moveAntihero();
         this.antihero_4.moveAntihero();
+
+
+        if (!this.life) {
+            this.showAndHideMessage(GAME_OVER, musicGameOver, 300);
+            this.coinsTotal += this.coins;
+            this.isPlay = false;
+        }
 
         if (this.coins === this.map.coinsTotal) {
         // if (this.coins === 4) {
@@ -175,13 +200,13 @@ export class Game {
         if (!this.isPlay && this.level === this.levelTolal)
             this.showAndHideMessage(VICTORY, null, 5000);
 
-
+        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
         requestAnimationFrame(this.tick.bind(this));
     }
 
     showAndHideMessage(text, music, timeOn) {
         setTimeout(() => {
-            if (this.isSound && music) music.play();
+            if (this.isSound) music.play();
             modal.innerHTML = text;
             modal.classList.add("show-modal");
 
@@ -196,7 +221,7 @@ export class Game {
                 this.tick();
             }
 
-            if (!this.isPlay && this.level !== this.levelTolal) {
+            if (!this.isPlay && this.level !== this.levelTolal && this.life) {
                 this.isPlay = true;
                 this.hero.posX = cellSize * 3 + cellSize / 2;
                 this.hero.posY =cellSize * 11 + cellSize / 2;
@@ -205,8 +230,8 @@ export class Game {
                 this.start();
             }
 
-            if (!this.isPlay && this.level === this.levelTolal) {
-                // this.map.drawMap();
+            if (!this.isPlay && this.level === this.levelTolal ||
+                !this.isPlay && !this.life) {
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
                 scoreboard.classList.remove("life");
             }

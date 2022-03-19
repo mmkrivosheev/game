@@ -2,7 +2,8 @@ export class Antihero {
 
     constructor(parent, posX, posY, speed) {
         this.parent = parent;
-        this.color = "#726775";
+        // this.color = "#726775";
+        this.color = "#606973";
         this.posX = posX * cellSize + cellSize / 2;
         this.posY = posY * cellSize + cellSize / 2;
         this.speed =  cellSize / speed;

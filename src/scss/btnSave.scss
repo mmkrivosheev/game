@@ -1,0 +1,78 @@
+.save {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+  padding: 2% 2% 30% 2%;
+  background-color: transparent;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.show-save {
+  display: flex;
+}
+
+.save form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.save .total {
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 15%;
+}
+
+.save .message {
+  font-size: 50%;
+  text-align: justify;
+  margin-bottom: 5%;
+}
+
+.save .input-name {
+  display: block;
+  color: inherit;
+  width: 60%;
+  font-size: 62.5%;
+  padding: 2% 4%;
+  margin: 4%;
+  border: none;
+  outline: none;
+  border-radius: 0.2rem;
+  background-color: #D5D9DE;
+  box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+}
+
+.save .input-name:focus {
+  outline: none;
+  border: none;
+}
+
+.save .btn-save-result {
+  font-size: 62.5%;
+  font-weight: 700;
+  text-transform: uppercase;
+  color:inherit;
+  display: block;
+  padding: 2% 4%;
+  border: none;
+  border-radius: 0.2rem;
+  //background-color: #7D848C;
+  background-color: #8d99a7;
+  box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+  transition: all 0.2s ease;
+}
+
+.save .btn-save-result:hover {
+  cursor: pointer;
+}
+
+.save .btn-save-result:active {
+  box-shadow: inset 0 0 3px #3c4f55, 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+}

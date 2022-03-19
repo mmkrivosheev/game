@@ -11,14 +11,34 @@
 	<div class="wrapper">
 		<div class="header">
 			<p class="scoreboard life" data-life="4"></p>
-			<button type="button" id="btn-pause" class="btn">PAUSE</button>
-			<button type="button" id="btn-sound" class="btn">SOUND</button>
-			<button type="button" id="btn-menu" class="btn">MENU</button>
-			<button type="button" id="btn-save" class="btn">SAVE</button>
+			<button type="button" id="btn-pause" class="btn">pause</button>
+			<button type="button" id="btn-sound" class="btn">sound</button>
+			<button type="button" id="btn-menu" class="btn">menu</button>
+			<button type="button" id="btn-save" class="btn">save</button>
 		</div>
 		<div class="main">
 			<canvas id="cvs" class="cvs"></canvas>
-			<p id="modal" class="modal"></p>
+			<div class="menu" id="menu">
+				<button type="button" id="btn-new-game" class="btn-menu">new game</button>
+				<button type="button" id="btn-rules" class="btn-menu">rules</button>
+				<button type="button" id="btn-main" class="btn-menu">main</button>
+			</div>
+			<div class="save" id="save">
+				<p class="total" id="total"></p>
+				<p class="message" id="message">
+					If you want to save the result, enter your name and click save.
+				</p>
+				<form>
+					<input type="text" id="input-name" class="input-name">
+					<button type="submit" id="btn-save-result" class="btn-save-result">save</button>
+				</form>
+			</div>
+			<div id="modal" class="modal"></div>
+			<div id="rules" class="rules">
+				<p class="title">rules</p>
+				<p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad aliquid aperiam aspernatur dolores ea, ipsum officiis omnis pariatur quidem!</p>
+				<p id="btn-ok" class="btn-ok">ok</p>
+			</div>
 		</div>
 	</div>
 </body>

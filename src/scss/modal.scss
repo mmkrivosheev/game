@@ -1,0 +1,69 @@
+.modal {
+  font-weight: 700;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  background-color: #DAD0D0;
+  border-radius: 0.5%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.show-modal {
+  display: flex;
+  animation-name: modal;
+  animation-duration: 4s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes modal {
+  0% {
+    font-size: 0;
+    color: #DAD0D0;
+    height: 0;
+    width: 0;
+    padding: 0;
+    opacity: 0;
+  }
+
+  10% {
+    font-size: 0;
+    color: #778899;
+    height: 15%;
+    width: 55%;
+    padding: 0;
+    opacity: 0.8;
+    box-shadow: 0 0 5px 2px #606973;
+  }
+
+  20% {
+    font-size: 6vmin;
+    color: #778899;
+    height: 40%;
+    width: 60%;
+    padding: 5%;
+    opacity: 1;
+  }
+
+  80% {
+    font-size: 6vmin;
+    color: #778899;
+    height: 40%;
+    width: 60%;
+    padding: 5%;
+    opacity: 1;
+    box-shadow: 0 0 5px 2px #606973;
+  }
+
+  100% {
+    font-size: 0;
+    color:  #DAD0D0;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    padding: 0;
+  }
+}

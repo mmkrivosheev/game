@@ -10,6 +10,7 @@ export class Hero {
         this.collision = new CollisionDetector(this);
         this.parent = parent;
         this.color = "#39536D";
+        this.colorDetector = "#f0813c";
         this.posX = posX * cellSize + cellSize / 2;
         this.posY = posY * cellSize + cellSize / 2;
         this.speed =  cellSize / speed;
@@ -23,20 +24,21 @@ export class Hero {
         this.isMapBorderLeftCollision = false;
         this.staticBodyCollision = [];
         this.coinCollision = [];
+        this.isAntiheroCollision = false;
     }
 
     drawHero() {
         let cvs = document.getElementById("cvs");
         const ctx = cvs.getContext('2d');
         ctx.save();
-        ctx.fillStyle = "#39536D";
+        ctx.fillStyle = this.color;
+        ctx.fillStyle = !this.isAntiheroCollision ? this.color : this.colorDetector;
         ctx.translate(this.posX - (this.size / 2), this.posY - (this.size / 2));
         ctx.fillRect(0, 0, this.size, this.size);
         ctx.restore();
     }
 
     moveHero(e) {
-        e.preventDefault();
 
         if (!this.isPause) {
             if (e.key === "ArrowLeft") {

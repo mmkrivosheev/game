@@ -97,21 +97,22 @@ export class Map {
         this.coinsTotal = count;
     }
 
-    drawMap() {
-        if (!this.parent.map.maps[this.parent.level - 1]) return;
-
+    drawMap(map) {
+        const menu = document.querySelector("#menu");
         const cvs = document.getElementById("cvs");
         const ctx = cvs.getContext('2d');
         cvs.width = cvsWidth;
         cvs.height = cvsHeight;
         cvs.style.border = cvsBorder + "px solid " + this.borderColor;
 
-        for (let y = 0; y < this.parent.map.maps[this.parent.level - 1].length; y++) {
-            for (let x = 0; x < this.parent.map.maps[this.parent.level - 1][y].length; x++) {
-                if (this.parent.map.maps[this.parent.level - 1][y][x] === 1)
+        if (!map) return;
+
+        for (let y = 0; y < map.length; y++) {
+            for (let x = 0; x < map[y].length; x++) {
+                if (map[y][x] === 1)
                     this.drawRect(ctx, x, y);
 
-                if (this.parent.map.maps[this.parent.level - 1][y][x] === 2)
+                if (map[y][x] === 2)
                     this.drawCircle(ctx, x, y, cellSize / 8);
             }
         }
