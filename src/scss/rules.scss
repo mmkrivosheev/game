@@ -6,9 +6,10 @@
   justify-content: center;
   align-items: center;
   position: absolute;
+  z-index: 3;
   top: 47%;
   left: 50%;
-  padding: 10%;
+  padding: 5%;
   width: 80%;
   height: 80%;
   opacity: 1;
@@ -21,23 +22,29 @@
 .show-rules {
   display: flex;
   animation-name: rules;
-  animation-duration: 0.8s;
+  animation-duration: 0.5s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
 }
 
 .rules .title {
-  font-size: 120%;
+  font-size: 130%;
   margin-bottom: 5%;
   text-transform: uppercase;
+  @media (max-width: $screen-mobile) {
+    font-size: 170%;
+  }
 }
 
 .rules .text {
   margin-bottom: 30%;
+  @media (max-width: $screen-mobile) {
+    font-size: 120%;
+  }
 }
 
 .rules .btn-ok {
-  font-size: 120%;
+  font-size: 150%;
   font-weight: 700;
   color: #778899;
   text-transform: uppercase;
@@ -46,7 +53,9 @@
   padding: 1%;
   border: none;
   cursor: pointer;
-  text-decoration: underline;
+  @media (max-width: $screen-mobile) {
+    font-size: 200%;
+  }
 }
 
 @keyframes rules {
@@ -56,7 +65,6 @@
     width: 0;
     height: 0;
     padding: 0;
-    opacity: 0;
     box-shadow: none;
   }
 
@@ -66,7 +74,6 @@
     width: 75%;
     height: 15%;
     padding: 10%;
-    opacity: 0.8;
     box-shadow: 0 0 5px 2px #606973;
   }
 
@@ -74,7 +81,6 @@
     font-size: 0;
     width: 80%;
     height: 80%;
-    opacity: 1;
   }
 
   100% {

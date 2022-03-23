@@ -3,10 +3,14 @@
   font-size: 100%;
   font-weight: 700;
   width: 48.5%;
-  padding-left: 1.2%;
+  padding-left: 0.5rem;
   border: 0.5px solid #3c4f55;
   background-color: green;
   box-shadow: inset 0 0 3px #464b51, inset 0 0 20px #0f9a0f;
+  @media (max-width: $screen-mobile) {
+    width: 100%;
+    font-size: 170%;
+  }
 }
 
 .life::before {
@@ -24,8 +28,10 @@
   width: 5%;
   height: 5%;
   transform: translateY(25%);
-  @media (max-width: 1199px) {
-    transform: translateY(180%);
+  @media (max-width: $screen-mobile) {
+    transform: translateY(100%);
+    height: 4.5%;
+    width: 4.5%;
   }
 }
 
@@ -37,7 +43,9 @@
   height: 9%;
   width: 9%;
   transform: translateY(25%);
-  @media (max-width: 1199px) {
-    transform: translateY(100%);
+  @media (max-width: $screen-mobile) {
+    height: 8%;
+    width: 8%;
+    transform: translateY(70%);
   }
 }

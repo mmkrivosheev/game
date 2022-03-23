@@ -1,0 +1,85 @@
+html {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  line-height: 1.15;
+  color: #464b51;
+  position: relative;
+  display: none;
+  height: 100%;
+  background-color: #629576;
+  user-select: none;
+}
+
+body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.1%;
+  background-color: #606973;
+  box-shadow: 0 0 2px 2px #464b51;
+  transform: translate(-50%, -50%);
+  @media (max-width: $screen-mobile) {
+    position: static;
+    justify-content: start;
+    min-height: 100%;
+    box-shadow: none;
+    transform: translate(0, 0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.2%;
+  margin-bottom: 1.2%;
+}
+
+.main {
+  position: relative;
+}
+
+.btn-set-mobile {
+  font-size: 2rem;
+  font-weight: 700;
+  color: inherit;
+  position: absolute;
+  z-index: 10;
+  display: none;
+  background-color: #7D848C;
+  text-shadow: 0 0 0.25vmin #2D3640;
+  @media (max-width: $screen-mobile) and (orientation: portrait) {
+    left: 0;
+    display: block;
+    bottom: 0.5rem;
+    width: 2rem;
+    height: 4rem;
+    transform: translate(0, 50%);
+  }
+  @media (max-width: $screen-mobile) and (orientation: landscape) {
+    right: 2.5rem;
+    bottom: 0;
+    display: block;
+    width: 4rem;
+    height: 2rem;
+
+  }
+}
+
+.btn-set-mobile:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @media (max-width: $screen-mobile) and (orientation: portrait) {
+    content: 	"\203A";
+    transform: translate(-50%, -58.5%);
+  }
+  @media (max-width: $screen-mobile) and (orientation: landscape) {
+    content: 	"\203A";
+    transform: translate(-58.5%, -50%) rotate(-90deg);
+  }
+}

@@ -3,18 +3,27 @@
 <head>
 	<title>game</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no, maximum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
 </head>
 <body>
-	<div class="wrapper">
+	<div id="wrapper" class="wrapper">
 		<div class="header">
-			<p class="scoreboard life" data-life="4"></p>
-			<button type="button" id="btn-pause" class="btn">pause</button>
-			<button type="button" id="btn-sound" class="btn">sound</button>
-			<button type="button" id="btn-menu" class="btn">menu</button>
-			<button type="button" id="btn-save" class="btn">save</button>
+			<p class="scoreboard life" data-life="3"></p>
+			<div class="btn-set">
+				<button type="button" id="btn-pause" class="btn">pause</button>
+				<button type="button" id="btn-sound" class="btn">sound</button>
+				<button type="button" id="btn-menu" class="btn">menu</button>
+				<button type="button" id="btn-save" class="btn">save</button>
+			</div>
+			<div id="control" class="control">
+				<button class="btn-control btn-left"></button>
+				<button class="btn-control btn-top"></button>
+				<button class="btn-control btn-bottom"></button>
+				<button class="btn-control btn-right"></button>
+			</div>
 		</div>
 		<div class="main">
 			<canvas id="cvs" class="cvs"></canvas>
@@ -36,10 +45,11 @@
 			<div id="modal" class="modal"></div>
 			<div id="rules" class="rules">
 				<p class="title">rules</p>
-				<p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad aliquid aperiam aspernatur dolores ea, ipsum officiis omnis pariatur quidem!</p>
-				<p id="btn-ok" class="btn-ok">ok</p>
+				<p class="text"></p>
+				<p id="btn-ok" class="btn-ok">=ok=</p>
 			</div>
 		</div>
 	</div>
+	<button type="button" class="btn-set-mobile"></button>
 </body>
 </html>

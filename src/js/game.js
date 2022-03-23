@@ -1,30 +1,36 @@
-import { Map } from "./map";
+import {Map} from "./map";
 import { Hero } from "./hero";
 import { Antihero } from "./antihero";
-import { setCssProperties } from "./index";
+import * as music from "./audio";
+import * as screen from "./screen";
 
 const PAUSE = "PAUSE";
 const MENU = "MENU";
 const SAVE = "SAVE";
 const LEVEL = "LEVEL ";
-const WON = "YOU WON !";
-const VICTORY = "VICTORY !";
+const GREAT = "GREAT !";
+const WIN = "YOU WON !";
 const GAME_OVER = "GAME OVER !";
-const musicWin = new Audio();
-const modal = document.querySelector("#modal");
 const scoreboard = document.querySelector(".scoreboard");
-musicWin.preload = 'auto';
-musicWin.src = "src/audio/win.mp3";
-
-const musicGameOver = new Audio();
-musicGameOver.preload = 'auto';
-musicGameOver.src = "src/audio/lose.mp3";
+const menu = document.querySelector("#menu");
+const save = document.querySelector("#save");
+const modal = document.querySelector("#modal");
 
 export class Game {
 
     constructor() {
         this.heroSpeed = 35;
-        this.antiheroSpeed = 30;
+        this.antiheroSpeed = 28;
+        this.level = 0;
+        this.coins = 0;
+        this.life = 3;
+        this.coinsTotal = null;
+        this.isPlay = true;
+        this.isPause = false;
+        this.isSound = false;
+        this.isMenu = false;
+        this.isSave = false;
+        this.isRulesShow = false;
         this.map = new Map(this);
         this.hero = new Hero(this, 3, 11, this.heroSpeed);
         this.antihero_1 = new Antihero(this, 0, 0, this.antiheroSpeed);
@@ -32,26 +38,58 @@ export class Game {
         this.antihero_3 = new Antihero(this, 18, 19, this.antiheroSpeed);
         this.antihero_4 = new Antihero(this, 0, 19, this.antiheroSpeed);
         this.levelTolal = this.map.maps.length;
-        this.coinsTotal = null;
-        this.level = 0;
-        this.coins = 0;
-        this.life = 4;
-        this.isPlay = true;
-        this.isPause = false;
-        this.isSound = false;
-        this.isMenu = false;
-        this.isSave = false;
+        this.winTotal = 0;
     }
 
-    start() {
-        this.level++;
-        setCssProperties();
+    resize() {
+        const PrevCellSize = cellSize;
+        screen.calcCvsSize();
+        this.hero.posX = this.hero.posX * (cellSize / PrevCellSize);
+        this.hero.posY = this.hero.posY * (cellSize / PrevCellSize);
+        this.hero.size = cellSize;
+        this.hero.speed = this.hero.speed * (cellSize / PrevCellSize);
+
+        this.antihero_1.posX = this.antihero_1.posX * (cellSize / PrevCellSize);
+        this.antihero_1.posY = this.antihero_1.posY * (cellSize / PrevCellSize);
+        this.antihero_1.size = cellSize;
+        this.antihero_1.speed = this.antihero_1.speed * (cellSize / PrevCellSize);
+
+        this.antihero_2.posX = this.antihero_2.posX * (cellSize / PrevCellSize);
+        this.antihero_2.posY = this.antihero_2.posY * (cellSize / PrevCellSize);
+        this.antihero_2.size = cellSize;
+        this.antihero_2.speed = this.antihero_2.speed * (cellSize / PrevCellSize);
+
+        this.antihero_3.posX = this.antihero_3.posX * (cellSize / PrevCellSize);
+        this.antihero_3.posY = this.antihero_3.posY * (cellSize / PrevCellSize);
+        this.antihero_3.size = cellSize;
+        this.antihero_3.speed = this.antihero_3.speed * (cellSize / PrevCellSize);
+
+        this.antihero_4.posX = this.antihero_4.posX * (cellSize / PrevCellSize);
+        this.antihero_4.posY = this.antihero_4.posY * (cellSize / PrevCellSize);
+        this.antihero_4.size = cellSize;
+        this.antihero_4.speed = this.antihero_4.speed * (cellSize / PrevCellSize);
+
         this.map.drawMap(this.map.maps[this.level - 1]);
         this.hero.drawHero();
         this.antihero_1.drawAntihero();
         this.antihero_2.drawAntihero();
         this.antihero_3.drawAntihero();
         this.antihero_4.drawAntihero();
+
+    }
+
+    start() {
+        this.level++;
+        this.coins = 0;
+        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.hero.drawHero();
+        this.antihero_1.drawAntihero();
+        this.antihero_2.drawAntihero();
+        this.antihero_3.drawAntihero();
+        this.antihero_4.drawAntihero();
+        window.addEventListener("resize", () => this.resize());
+
+
         this.hero.isPause = true;
         this.map.getCoinsTotal(this.map.maps[this.level - 1]);
         this.isSound
@@ -59,26 +97,37 @@ export class Game {
             : scoreboard.classList.add("sound-off");
         scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
         this.showAndHideMessage(LEVEL + this.level, null, 300);
-        window.addEventListener("resize", setCssProperties);
         document.addEventListener("keydown", (e) => this.hero.moveHero(e));
+        document.addEventListener("click", (e) => this.hero.moveHero(e));
+    }
+
+    playerPos(player, cellX,cellY, speedX, speedY) {
+        player.posX = cellSize * cellX + cellSize / 2;
+        player.posY =cellSize * cellY + cellSize / 2;
+        player.speedX = speedX;
+        player.speedY = speedY;
     }
 
     pause(boolean) {
-        if (!this.isPlay || this.isMenu || this.isSave) return;
-
-        if (!boolean) {
-            scoreboard.classList.toggle("life");
-            this.isPause = !this.isPause;
-        }
+        if (!this.isPlay || this.isMenu || this.isSave || this.isRulesShow) return;
+        if (!boolean) this.isPause = !this.isPause;
 
         if (this.isPause) {
+            scoreboard.innerHTML = PAUSE;
+            scoreboard.classList.remove("life");
+            this.hero.isPause = true;
             this.hero.speedX = 0;
             this.hero.speedY = 0;
-            scoreboard.innerHTML = PAUSE;
-            this.hero.isPause = true;
+            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.hero.drawHero();
+            this.antihero_1.drawAntihero();
+            this.antihero_2.drawAntihero();
+            this.antihero_3.drawAntihero();
+            this.antihero_4.drawAntihero();
         } else {
-            this.tick();
+            scoreboard.classList.add("life");
             this.hero.isPause = false;
+            this.tick();
         }
     }
 
@@ -89,19 +138,36 @@ export class Game {
     }
 
     menu() {
-        if (!this.isPause && !this.isSave && this.isPlay) scoreboard.classList.toggle("life");
+        if (this.isRulesShow) return;
+        if(this.isSave) this.save();
         this.isMenu = !this.isMenu;
-        this.isSave = false;
 
         if (this.isMenu) {
+            menu.classList.add("show-menu");
             scoreboard.innerHTML = MENU;
+            scoreboard.classList.remove("life");
             this.map.drawMap();
             this.hero.isPause = true;
         } else {
-            if (!this.isPlay && this.level !== this.levelTolal)
+            menu.classList.remove("show-menu");
+            this.hero.isPause = false;
+            if (this.isPause) this.pause(true);
+
+            if (!this.isPause && this.isPlay) scoreboard.classList.add("life");
+
+            if (!this.isPause &&
+                !this.isPlay &&
+                this.winTotal !== this.levelTolal)
                 scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
 
-            if (!this.isPlay && this.level === this.levelTolal)
+            if (!this.isPause &&
+                !this.isPlay &&
+                this.winTotal === this.levelTolal)
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+
+            if (!this.isPause &&
+                !this.isPlay &&
+                !this.life)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
             this.map.drawMap(this.map.maps[this.level - 1]);
@@ -110,24 +176,40 @@ export class Game {
             this.antihero_2.drawAntihero();
             this.antihero_3.drawAntihero();
             this.antihero_4.drawAntihero();
-            // this.pause(true);
         }
     }
 
     save() {
-        if (!this.isPause && !this.isMenu && this.isPlay) scoreboard.classList.toggle("life");
+        if (this.isRulesShow) return;
+        if(this.isMenu) this.menu();
         this.isSave = !this.isSave;
-        this.isMenu = false;
 
         if (this.isSave) {
+            save.classList.add("show-save");
             scoreboard.innerHTML = SAVE;
+            scoreboard.classList.remove("life");
             this.map.drawMap();
             this.hero.isPause = true;
         } else {
-            if (!this.isPlay && this.level !== this.levelTolal)
+            save.classList.remove("show-save");
+            this.hero.isPause = false;
+            if (this.isPause && this.isPlay) this.pause(true);
+
+            if (!this.isPause && this.isPlay) scoreboard.classList.add("life");
+
+            if (!this.isPause &&
+                !this.isPlay &&
+                this.winTotal !== this.levelTolal)
                 scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
 
-            if (!this.isPlay && this.level === this.levelTolal)
+            if (!this.isPause &&
+                !this.isPlay &&
+                this.winTotal === this.levelTolal)
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+
+            if (!this.isPause &&
+                !this.isPlay &&
+                !this.life)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
             this.map.drawMap(this.map.maps[this.level - 1]);
@@ -136,19 +218,17 @@ export class Game {
             this.antihero_2.drawAntihero();
             this.antihero_3.drawAntihero();
             this.antihero_4.drawAntihero();
-            this.pause(true);
         }
     }
 
     tick() {
-        // if (!this.isPlay || this.isPause || this.isMenu || this.isSave) return;
-        if (!this.isPlay || this.isPause || this.isSave) return;
+        if (!this.isPlay || this.isPause) return;
 
-        this.hero.passBetweenBodies();
-        this.antihero_1.passBetweenBodies();
-        this.antihero_2.passBetweenBodies();
-        this.antihero_3.passBetweenBodies();
-        this.antihero_4.passBetweenBodies();
+        this.hero.passBetweenBodies(this.map.maps[this.level - 1]);
+        this.antihero_1.passBetweenBodies(this.map.maps[this.level - 1]);
+        this.antihero_2.passBetweenBodies(this.map.maps[this.level - 1]);
+        this.antihero_3.passBetweenBodies(this.map.maps[this.level - 1]);
+        this.antihero_4.passBetweenBodies(this.map.maps[this.level - 1]);
 
         this.hero.calcNewPos();
         this.antihero_1.calcNewPos();
@@ -157,18 +237,18 @@ export class Game {
         this.antihero_4.calcNewPos();
 
         this.hero.collision.mapBorderDetector();
-        this.hero.collision.staticBodyDetector();
-        this.hero.collision.coinDetector();
-        this.hero.collision.antiheroDetector(this.antihero_1);
-        this.hero.collision.antiheroDetector(this.antihero_2);
-        this.hero.collision.antiheroDetector(this.antihero_3);
-        this.hero.collision.antiheroDetector(this.antihero_4);
+        this.hero.collision.staticBodyDetector(this.map.maps[this.level - 1]);
+        this.hero.collision.coinDetector(this.map.maps[this.level - 1]);
+        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_1);
+        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_2);
+        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_3);
+        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_4);
 
         this.hero.getReactionToMapBorderCollision();
         this.hero.getReactionToStaticBodyCollision();
         this.hero.getReactionToCoinCollision();
 
-        if (!this.isMenu) {
+        if (!this.isMenu && !this.isSave) {
             this.map.drawMap(this.map.maps[this.level - 1]);
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
@@ -177,30 +257,37 @@ export class Game {
             this.antihero_4.drawAntihero();
         }
 
-        this.antihero_1.moveAntihero();
-        this.antihero_2.moveAntihero();
-        this.antihero_3.moveAntihero();
-        this.antihero_4.moveAntihero();
-
-
-        if (!this.life) {
-            this.showAndHideMessage(GAME_OVER, musicGameOver, 300);
-            this.coinsTotal += this.coins;
-            this.isPlay = false;
-        }
+        this.antihero_1.moveAntihero(this.map.maps[this.level - 1]);
+        this.antihero_2.moveAntihero(this.map.maps[this.level - 1]);
+        this.antihero_3.moveAntihero(this.map.maps[this.level - 1]);
+        this.antihero_4.moveAntihero(this.map.maps[this.level - 1]);
 
         if (this.coins === this.map.coinsTotal) {
-        // if (this.coins === 4) {
-            this.showAndHideMessage(WON, musicWin, 300);
+            // if (this.coins === 4) {
+            this.showAndHideMessage(GREAT, music.musicWin, 300);
             this.coinsTotal += this.coins;
-            this.coins = 0;
             this.isPlay = false;
+            this.winTotal++;
         }
 
-        if (!this.isPlay && this.level === this.levelTolal)
-            this.showAndHideMessage(VICTORY, null, 5000);
+        if (this.winTotal === this.levelTolal) {
+            this.showAndHideMessage(WIN, null, 5000);
+            scoreboard.classList.remove("life");
+            this.isPlay = false;
+            scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+        }
 
-        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+        if (!this.life) {
+            this.showAndHideMessage(GAME_OVER, music.musicGameOver, 300);
+            scoreboard.classList.remove("life");
+            this.coinsTotal += this.coins;
+            this.isPlay = false;
+            scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+        }
+
+        if (this.isPlay && !this.isMenu && !this.isSave)
+            scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+
         requestAnimationFrame(this.tick.bind(this));
     }
 
@@ -221,21 +308,15 @@ export class Game {
                 this.tick();
             }
 
-            if (!this.isPlay && this.level !== this.levelTolal && this.life) {
+            if (!this.isPlay && this.winTotal !== this.levelTolal && this.life) {
                 this.isPlay = true;
-                this.hero.posX = cellSize * 3 + cellSize / 2;
-                this.hero.posY =cellSize * 11 + cellSize / 2;
-                this.hero.speedX = 0;
-                this.hero.speedY = 0;
+                this.playerPos(this.hero, 3, 11, 0, 0);
+                this.playerPos(this.antihero_1, 0, 0, 0, 0);
+                this.playerPos(this.antihero_2, 18, 0, 0, 0);
+                this.playerPos(this.antihero_3, 18, 19, 0, 0);
+                this.playerPos(this.antihero_4, 0, 19, 0, 0);
                 this.start();
             }
-
-            if (!this.isPlay && this.level === this.levelTolal ||
-                !this.isPlay && !this.life) {
-                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
-                scoreboard.classList.remove("life");
-            }
-
 
         }, timeOn + 4300);
     }

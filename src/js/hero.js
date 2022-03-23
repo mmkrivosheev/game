@@ -1,8 +1,5 @@
 import {CollisionDetector} from "./collisions";
-
-const musicCoin = new Audio();
-musicCoin.preload = 'auto';
-musicCoin.src = "src/audio/coin.mp3";
+import * as music from "./audio";
 
 export class Hero {
 
@@ -39,26 +36,37 @@ export class Hero {
     }
 
     moveHero(e) {
+        if (e.target.classList.contains("btn-control")) e.target.blur();
 
         if (!this.isPause) {
-            if (e.key === "ArrowLeft") {
+            if (e.key === "ArrowLeft" || e.target.classList.contains("btn-left")) {
                 this.speedY = 0;
                 this.speedX = -this.speed;
+                vibro();
             }
 
-            if (e.key === "ArrowRight") {
+            if (e.key === "ArrowRight" || e.target.classList.contains("btn-right")) {
                 this.speedY = 0;
                 this.speedX = +this.speed;
+                vibro();
             }
 
-            if (e.key === "ArrowUp") {
+            if (e.key === "ArrowUp" || e.target.classList.contains("btn-top")) {
                 this.speedX = 0;
                 this.speedY = -this.speed;
+                vibro();
             }
 
-            if (e.key === "ArrowDown") {
+            if (e.key === "ArrowDown" || e.target.classList.contains("btn-bottom")) {
                 this.speedX = 0;
                 this.speedY = +this.speed;
+                vibro();
+            }
+        }
+
+        function vibro() {
+            if (navigator.vibrate) {
+                    window.navigator.vibrate(100);
             }
         }
     }
@@ -68,30 +76,30 @@ export class Hero {
         this.posY += this.speedY;
     }
 
-    passBetweenBodies() {
+    passBetweenBodies(map) {
         const heroCellX = Math.floor(this.posX / cellSize);
         const heroCellY = Math.floor(this.posY / cellSize);
 
         if (this.speedX > 0 &&
-            heroCellX < this.parent.map.maps[this.parent.level - 1][0].length - 1 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX + 1] !== 1)
+            heroCellX < map[0].length - 1 &&
+            map[heroCellY][heroCellX + 1] !== 1)
             this.posY = heroCellY * cellSize + cellSize / 2;
 
         if (this.speedX < 0 &&
             heroCellX > 0 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX - 1] !== 1)
+            map[heroCellY][heroCellX - 1] !== 1)
             this.posY = heroCellY * cellSize + cellSize / 2;
 
         if (this.speedY > 0 &&
-            heroCellY < this.parent.map.maps[this.parent.level - 1].length - 1 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY < this.parent.map.maps[this.parent.level - 1].length - 1
+            heroCellY < map.length - 1 &&
+            map[heroCellY < map.length - 1
                 ? heroCellY + 1
                 : heroCellY][heroCellX] !== 1)
             this.posX = heroCellX * cellSize + cellSize / 2;
 
         if (this.speedY < 0 &&
             heroCellY > 0 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
+            map[heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
             this.posX = heroCellX * cellSize + cellSize / 2;
     }
 
@@ -147,7 +155,7 @@ export class Hero {
     getReactionToCoinCollision() {
         if (this.coinCollision.length) {
             const [x, y] = this.coinCollision;
-            if (this.parent.isSound) musicCoin.play();
+            if (this.parent.isSound) music.musicCoin.play();
             this.parent.map.maps[this.parent.level - 1][y][x] = 0;
             this.parent.coins++;
             this.coinCollision = [];
