@@ -42,14 +42,15 @@
 .save .input-name {
   display: block;
   color: inherit;
-  width: 60%;
+  //width: 60%;
+  width: 15rem;
   font-size: 62.5%;
   padding: 2% 4%;
   margin: 4%;
   border: none;
   outline: none;
   appearance: auto;
-  border-radius: 0.2rem;
+  border-radius: 0.05rem;
   background-color: #DAD0D0;
   box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
   @media (max-width: $screen-mobile) {
@@ -72,7 +73,7 @@
   display: block;
   padding: 2% 4%;
   border: none;
-  border-radius: 0.2rem;
+  border-radius: 0.05rem;
   background-color: #8d99a7;
   text-shadow: 0 0 0.15vmin #464b51;
   box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;

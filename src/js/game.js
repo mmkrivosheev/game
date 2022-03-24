@@ -1,8 +1,7 @@
-import {Map} from "./map";
+import { Map } from "./map";
 import { Hero } from "./hero";
 import { Antihero } from "./antihero";
 import * as music from "./audio";
-import * as screen from "./screen";
 
 const PAUSE = "PAUSE";
 const MENU = "MENU";
@@ -17,7 +16,6 @@ const save = document.querySelector("#save");
 const modal = document.querySelector("#modal");
 
 export class Game {
-
     constructor() {
         this.heroSpeed = 35;
         this.antiheroSpeed = 28;
@@ -28,8 +26,8 @@ export class Game {
         this.isPlay = true;
         this.isPause = false;
         this.isSound = false;
-        this.isMenu = false;
-        this.isSave = false;
+        this.isMenuShow = false;
+        this.isSaveShow = false;
         this.isRulesShow = false;
         this.map = new Map(this);
         this.hero = new Hero(this, 3, 11, this.heroSpeed);
@@ -41,43 +39,6 @@ export class Game {
         this.winTotal = 0;
     }
 
-    resize() {
-        const PrevCellSize = cellSize;
-        screen.calcCvsSize();
-        this.hero.posX = this.hero.posX * (cellSize / PrevCellSize);
-        this.hero.posY = this.hero.posY * (cellSize / PrevCellSize);
-        this.hero.size = cellSize;
-        this.hero.speed = this.hero.speed * (cellSize / PrevCellSize);
-
-        this.antihero_1.posX = this.antihero_1.posX * (cellSize / PrevCellSize);
-        this.antihero_1.posY = this.antihero_1.posY * (cellSize / PrevCellSize);
-        this.antihero_1.size = cellSize;
-        this.antihero_1.speed = this.antihero_1.speed * (cellSize / PrevCellSize);
-
-        this.antihero_2.posX = this.antihero_2.posX * (cellSize / PrevCellSize);
-        this.antihero_2.posY = this.antihero_2.posY * (cellSize / PrevCellSize);
-        this.antihero_2.size = cellSize;
-        this.antihero_2.speed = this.antihero_2.speed * (cellSize / PrevCellSize);
-
-        this.antihero_3.posX = this.antihero_3.posX * (cellSize / PrevCellSize);
-        this.antihero_3.posY = this.antihero_3.posY * (cellSize / PrevCellSize);
-        this.antihero_3.size = cellSize;
-        this.antihero_3.speed = this.antihero_3.speed * (cellSize / PrevCellSize);
-
-        this.antihero_4.posX = this.antihero_4.posX * (cellSize / PrevCellSize);
-        this.antihero_4.posY = this.antihero_4.posY * (cellSize / PrevCellSize);
-        this.antihero_4.size = cellSize;
-        this.antihero_4.speed = this.antihero_4.speed * (cellSize / PrevCellSize);
-
-        this.map.drawMap();
-        this.hero.drawHero();
-        this.antihero_1.drawAntihero();
-        this.antihero_2.drawAntihero();
-        this.antihero_3.drawAntihero();
-        this.antihero_4.drawAntihero();
-
-    }
-
     start() {
         this.level++;
         this.coins = 0;
@@ -87,29 +48,19 @@ export class Game {
         this.antihero_2.drawAntihero();
         this.antihero_3.drawAntihero();
         this.antihero_4.drawAntihero();
-        window.addEventListener("resize", () => this.resize());
-
-
         this.hero.isPause = true;
         this.map.getCoinsTotal(this.map.maps[this.level - 1]);
         this.isSound
             ? scoreboard.classList.add("sound-on")
             : scoreboard.classList.add("sound-off");
         scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
-        this.showAndHideMessage(LEVEL + this.level, null, 300);
+        this.modal(LEVEL + this.level, null, 300);
         document.addEventListener("keydown", (e) => this.hero.moveHero(e));
         document.addEventListener("click", (e) => this.hero.moveHero(e));
     }
 
-    playerPos(player, cellX,cellY, speedX, speedY) {
-        player.posX = cellSize * cellX + cellSize / 2;
-        player.posY =cellSize * cellY + cellSize / 2;
-        player.speedX = speedX;
-        player.speedY = speedY;
-    }
-
     pause(boolean) {
-        if (!this.isPlay || this.isMenu || this.isSave || this.isRulesShow) return;
+        if (!this.isPlay || this.isMenuShow || this.isSaveShow || this.isRulesShow) return;
         if (!boolean) this.isPause = !this.isPause;
 
         if (this.isPause) {
@@ -139,10 +90,10 @@ export class Game {
 
     menu() {
         if (this.isRulesShow) return;
-        if(this.isSave) this.save();
-        this.isMenu = !this.isMenu;
+        if(this.isSaveShow) this.save();
+        this.isMenuShow = !this.isMenuShow;
 
-        if (this.isMenu) {
+        if (this.isMenuShow) {
             menu.classList.add("show-menu");
             scoreboard.innerHTML = MENU;
             scoreboard.classList.remove("life");
@@ -181,10 +132,10 @@ export class Game {
 
     save() {
         if (this.isRulesShow) return;
-        if(this.isMenu) this.menu();
-        this.isSave = !this.isSave;
+        if(this.isMenuShow) this.menu();
+        this.isSaveShow = !this.isSaveShow;
 
-        if (this.isSave) {
+        if (this.isSaveShow) {
             save.classList.add("show-save");
             scoreboard.innerHTML = SAVE;
             scoreboard.classList.remove("life");
@@ -248,13 +199,16 @@ export class Game {
         this.hero.getReactionToStaticBodyCollision();
         this.hero.getReactionToCoinCollision();
 
-        if (!this.isMenu && !this.isSave) {
+        if (!this.isMenuShow && !this.isSaveShow && !this.isRulesShow) {
             this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
             this.antihero_2.drawAntihero();
             this.antihero_3.drawAntihero();
             this.antihero_4.drawAntihero();
+        }
+        else {
+            this.map.drawMap(true);
         }
 
         this.antihero_1.moveAntihero();
@@ -263,35 +217,35 @@ export class Game {
         this.antihero_4.moveAntihero();
 
         if (this.coins === this.map.coinsTotal) {
-            // if (this.coins === 4) {
-            this.showAndHideMessage(GREAT, music.musicWin, 300);
+        // if (this.coins === 1) {
+            this.modal(GREAT, music.musicWin, 300);
             this.coinsTotal += this.coins;
             this.isPlay = false;
             this.winTotal++;
         }
 
         if (this.winTotal === this.levelTolal) {
-            this.showAndHideMessage(WIN, null, 5000);
+            this.modal(WIN, null, 5000);
             scoreboard.classList.remove("life");
             this.isPlay = false;
             scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
         }
 
         if (!this.life) {
-            this.showAndHideMessage(GAME_OVER, music.musicGameOver, 300);
+            this.modal(GAME_OVER, music.musicGameOver, 300);
             scoreboard.classList.remove("life");
             this.coinsTotal += this.coins;
             this.isPlay = false;
             scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
         }
 
-        if (this.isPlay && !this.isMenu && !this.isSave)
+        if (this.isPlay && !this.isMenuShow && !this.isSaveShow)
             scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
 
         requestAnimationFrame(this.tick.bind(this));
     }
 
-    showAndHideMessage(text, music, timeOn) {
+    modal(text, music, timeOn) {
         setTimeout(() => {
             if (this.isSound) music.play();
             modal.innerHTML = text;
@@ -319,5 +273,12 @@ export class Game {
             }
 
         }, timeOn + 4300);
+    }
+
+    playerPos(player, cellX,cellY, speedX, speedY) {
+        player.posX = cellSize * cellX + cellSize / 2;
+        player.posY =cellSize * cellY + cellSize / 2;
+        player.speedX = speedX;
+        player.speedY = speedY;
     }
 }

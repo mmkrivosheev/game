@@ -1,8 +1,7 @@
-import {CollisionDetector} from "./collisions";
+import { CollisionDetector } from "./collisions";
 import * as music from "./audio";
 
 export class Hero {
-
     constructor(parent, posX, posY, speed) {
         this.collision = new CollisionDetector(this);
         this.parent = parent;

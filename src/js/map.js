@@ -1,5 +1,4 @@
 export class Map {
-
     constructor(parent) {
         this.parent = parent;
         this.borderColor = "#DAD0D0";

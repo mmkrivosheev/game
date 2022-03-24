@@ -1,7 +1,6 @@
 import * as music from "./audio";
 
 export class CollisionDetector {
-
     constructor(player) {
         this.player = player;
         this.stopAntiheroDetector = false;

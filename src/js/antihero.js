@@ -1,5 +1,4 @@
 export class Antihero {
-
     constructor(parent, posX, posY, speed) {
         this.parent = parent;
         this.color = "#606973";
@@ -28,6 +27,9 @@ export class Antihero {
         const cellsAroundAntihero = [];
         const antiheroCellX = Math.floor(this.posX / cellSize);
         const antiheroCellY = Math.floor(this.posY / cellSize);
+
+        if ((this.posX - cellSize / 2) % cellSize > this.speed * 4 ||
+            (this.posY - cellSize / 2) % cellSize > this.speed * 4) return;
 
         if (this.prevCellX === antiheroCellX &&
             this.prevCellY === antiheroCellY) return;
@@ -82,27 +84,27 @@ export class Antihero {
     }
 
     passBetweenBodies() {
-        const heroCellX = Math.floor(this.posX / cellSize);
-        const heroCellY = Math.floor(this.posY / cellSize);
+        const antiheroCellX = Math.floor(this.posX / cellSize);
+        const antiheroCellY = Math.floor(this.posY / cellSize);
 
         if (this.speedX > 0 &&
-            heroCellX < this.parent.map.maps[this.parent.level - 1][0].length - 1 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX + 1] !== 1)
-            this.posY = heroCellY * cellSize + cellSize / 2;
+            antiheroCellX < this.parent.map.maps[this.parent.level - 1][0].length - 1 &&
+            this.parent.map.maps[this.parent.level - 1][antiheroCellY][antiheroCellX + 1] !== 1)
+            this.posY = antiheroCellY * cellSize + cellSize / 2;
 
-        if (this.speedX < 0 && heroCellX > 0 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX - 1] !== 1)
-            this.posY = heroCellY * cellSize + cellSize / 2;
+        if (this.speedX < 0 && antiheroCellX > 0 &&
+            this.parent.map.maps[this.parent.level - 1][antiheroCellY][antiheroCellX - 1] !== 1)
+            this.posY = antiheroCellY * cellSize + cellSize / 2;
 
         if (this.speedY > 0 &&
-            heroCellY <  this.parent.map.maps[this.parent.level - 1].length - 1 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY < this.parent.map.maps[this.parent.level - 1].length - 1
-                ? heroCellY + 1
-                : heroCellY][heroCellX] !== 1)
-            this.posX = heroCellX * cellSize + cellSize / 2;
+            antiheroCellY <  this.parent.map.maps[this.parent.level - 1].length - 1 &&
+            this.parent.map.maps[this.parent.level - 1][antiheroCellY < this.parent.map.maps[this.parent.level - 1].length - 1
+                ? antiheroCellY + 1
+                : antiheroCellY][antiheroCellX] !== 1)
+            this.posX = antiheroCellX * cellSize + cellSize / 2;
 
-        if (this.speedY < 0 && heroCellY > 0 &&
-            this.parent.map.maps[this.parent.level - 1][heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
-            this.posX = heroCellX * cellSize + cellSize / 2;
+        if (this.speedY < 0 && antiheroCellY > 0 &&
+            this.parent.map.maps[this.parent.level - 1][antiheroCellY ? antiheroCellY - 1 : 0][antiheroCellX] !== 1)
+            this.posX = antiheroCellX * cellSize + cellSize / 2;
     }
 }
