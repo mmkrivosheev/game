@@ -21,7 +21,7 @@ export class CollisionDetector {
             this.player.isMapBorderTopCollision = true;
     }
 
-    staticBodyDetector(map) {
+    staticBodyDetector() {
         const result = [];
         const playerCellX = Math.floor(this.player.posX / cellSize);
         const playerCellY = Math.floor(this.player.posY / cellSize);
@@ -33,7 +33,7 @@ export class CollisionDetector {
         ];
 
         for (let [y, x] of CellsAroundHero) {
-            if (map[y]?.[x] === 1 &&
+            if (this.player.parent.map.maps[this.player.parent.level - 1][y]?.[x] === 1 &&
                 checkOverlappingX(this.player, x) &&
                 checkOverlappingY(this.player, y))
                 result.push([x, y]);
@@ -50,15 +50,15 @@ export class CollisionDetector {
         }
     }
 
-    coinDetector(map) {
+    coinDetector() {
         const playerCellX = Math.floor(this.player.posX / cellSize);
         const playerCellY = Math.floor(this.player.posY / cellSize);
 
-        if (map[playerCellY][playerCellX] === 2)
+        if (this.player.parent.map.maps[this.player.parent.level - 1][playerCellY][playerCellX] === 2)
             this.player.coinCollision = [playerCellX, playerCellY];
     }
 
-    antiheroDetector(life, isSound, antihero) {
+    antiheroDetector(antihero) {
         if (!this.stopAntiheroDetector) {
             const scoreboard = document.querySelector(".scoreboard");
 
@@ -66,9 +66,9 @@ export class CollisionDetector {
                 Math.abs(this.player.posY - antihero.posY) < cellSize) {
                 this.stopAntiheroDetector = true;
                 this.player.isAntiheroCollision = true;
-                scoreboard.setAttribute("data-life", life - 1 + "");
-                life--;
-                if (isSound) music.musicAntihero.play();
+                scoreboard.setAttribute("data-life", this.player.parent.life - 1 + "");
+                this.player.parent.life--;
+                if (this.player.parent.isSound) music.musicAntihero.play();
 
                 setTimeout(() => {
                     this.stopAntiheroDetector = false;

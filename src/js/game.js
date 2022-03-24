@@ -69,7 +69,7 @@ export class Game {
         this.antihero_4.size = cellSize;
         this.antihero_4.speed = this.antihero_4.speed * (cellSize / PrevCellSize);
 
-        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.map.drawMap();
         this.hero.drawHero();
         this.antihero_1.drawAntihero();
         this.antihero_2.drawAntihero();
@@ -81,7 +81,7 @@ export class Game {
     start() {
         this.level++;
         this.coins = 0;
-        this.map.drawMap(this.map.maps[this.level - 1]);
+        this.map.drawMap();
         this.hero.drawHero();
         this.antihero_1.drawAntihero();
         this.antihero_2.drawAntihero();
@@ -118,7 +118,7 @@ export class Game {
             this.hero.isPause = true;
             this.hero.speedX = 0;
             this.hero.speedY = 0;
-            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
             this.antihero_2.drawAntihero();
@@ -146,7 +146,7 @@ export class Game {
             menu.classList.add("show-menu");
             scoreboard.innerHTML = MENU;
             scoreboard.classList.remove("life");
-            this.map.drawMap();
+            this.map.drawMap(true);
             this.hero.isPause = true;
         } else {
             menu.classList.remove("show-menu");
@@ -170,7 +170,7 @@ export class Game {
                 !this.life)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
-            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
             this.antihero_2.drawAntihero();
@@ -188,7 +188,7 @@ export class Game {
             save.classList.add("show-save");
             scoreboard.innerHTML = SAVE;
             scoreboard.classList.remove("life");
-            this.map.drawMap();
+            this.map.drawMap(true);
             this.hero.isPause = true;
         } else {
             save.classList.remove("show-save");
@@ -212,7 +212,7 @@ export class Game {
                 !this.life)
                 scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
 
-            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
             this.antihero_2.drawAntihero();
@@ -224,11 +224,11 @@ export class Game {
     tick() {
         if (!this.isPlay || this.isPause) return;
 
-        this.hero.passBetweenBodies(this.map.maps[this.level - 1]);
-        this.antihero_1.passBetweenBodies(this.map.maps[this.level - 1]);
-        this.antihero_2.passBetweenBodies(this.map.maps[this.level - 1]);
-        this.antihero_3.passBetweenBodies(this.map.maps[this.level - 1]);
-        this.antihero_4.passBetweenBodies(this.map.maps[this.level - 1]);
+        this.hero.passBetweenBodies();
+        this.antihero_1.passBetweenBodies();
+        this.antihero_2.passBetweenBodies();
+        this.antihero_3.passBetweenBodies();
+        this.antihero_4.passBetweenBodies();
 
         this.hero.calcNewPos();
         this.antihero_1.calcNewPos();
@@ -237,19 +237,19 @@ export class Game {
         this.antihero_4.calcNewPos();
 
         this.hero.collision.mapBorderDetector();
-        this.hero.collision.staticBodyDetector(this.map.maps[this.level - 1]);
-        this.hero.collision.coinDetector(this.map.maps[this.level - 1]);
-        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_1);
-        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_2);
-        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_3);
-        this.hero.collision.antiheroDetector(this.life, this.isSound, this.antihero_4);
+        this.hero.collision.staticBodyDetector();
+        this.hero.collision.coinDetector();
+        this.hero.collision.antiheroDetector(this.antihero_1);
+        this.hero.collision.antiheroDetector(this.antihero_2);
+        this.hero.collision.antiheroDetector(this.antihero_3);
+        this.hero.collision.antiheroDetector(this.antihero_4);
 
         this.hero.getReactionToMapBorderCollision();
         this.hero.getReactionToStaticBodyCollision();
         this.hero.getReactionToCoinCollision();
 
         if (!this.isMenu && !this.isSave) {
-            this.map.drawMap(this.map.maps[this.level - 1]);
+            this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
             this.antihero_2.drawAntihero();
@@ -257,10 +257,10 @@ export class Game {
             this.antihero_4.drawAntihero();
         }
 
-        this.antihero_1.moveAntihero(this.map.maps[this.level - 1]);
-        this.antihero_2.moveAntihero(this.map.maps[this.level - 1]);
-        this.antihero_3.moveAntihero(this.map.maps[this.level - 1]);
-        this.antihero_4.moveAntihero(this.map.maps[this.level - 1]);
+        this.antihero_1.moveAntihero();
+        this.antihero_2.moveAntihero();
+        this.antihero_3.moveAntihero();
+        this.antihero_4.moveAntihero();
 
         if (this.coins === this.map.coinsTotal) {
             // if (this.coins === 4) {

@@ -1,7 +1,7 @@
 export class Map {
 
     constructor(parent) {
-        // this.parent = parent;
+        this.parent = parent;
         this.borderColor = "#DAD0D0";
         this.rectColor = "#DAD0D0";
         this.circleColor = "#39536D";
@@ -53,33 +53,33 @@ export class Map {
         ];
     }
 
-    getCoinsTotal(map) {
+    getCoinsTotal() {
         let count = 0;
 
-        for (let y = 0; y < map.length; y++) {
-            for (let x = 0; x < map[y].length; x++) {
-                if (map[y][x] === 2) count++;
+        for (let y = 0; y < this.parent.map.maps[this.parent.level - 1].length; y++) {
+            for (let x = 0; x < this.parent.map.maps[this.parent.level - 1][y].length; x++) {
+                if (this.parent.map.maps[this.parent.level - 1][y][x] === 2) count++;
             }
         }
 
         this.coinsTotal = count;
     }
 
-    drawMap(map) {
+    drawMap(boolean) {
         const cvs = document.getElementById("cvs");
         const ctx = cvs.getContext('2d');
         cvs.width = cvsWidth;
         cvs.height = cvsHeight;
         cvs.style.border = cvsBorder + "px solid " + this.borderColor;
 
-        if (!map) return;
+        if (boolean) return;
 
-        for (let y = 0; y < map.length; y++) {
-            for (let x = 0; x < map[y].length; x++) {
-                if (map[y][x] === 1)
+        for (let y = 0; y < this.parent.map.maps[this.parent.level - 1].length; y++) {
+            for (let x = 0; x < this.parent.map.maps[this.parent.level - 1][y].length; x++) {
+                if (this.parent.map.maps[this.parent.level - 1][y][x] === 1)
                     this.drawRect(ctx, x, y);
 
-                if (map[y][x] === 2)
+                if (this.parent.map.maps[this.parent.level - 1][y][x] === 2)
                     this.drawCircle(ctx, x, y, cellSize / 8);
             }
         }

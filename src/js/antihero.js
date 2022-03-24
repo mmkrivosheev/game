@@ -23,7 +23,7 @@ export class Antihero {
         ctx.restore();
     }
 
-    moveAntihero(map) {
+    moveAntihero() {
         const result = [];
         const cellsAroundAntihero = [];
         const antiheroCellX = Math.floor(this.posX / cellSize);
@@ -45,8 +45,8 @@ export class Antihero {
             cellsAroundAntihero.push([antiheroCellY + 1, antiheroCellX]);
 
         for (let [y, x] of cellsAroundAntihero) {
-            if (map[y]?.[x] === 0 ||
-                map[y]?.[x] === 2) result.push([x, y]);
+            if (this.parent.map.maps[this.parent.level - 1][y]?.[x] === 0 ||
+                this.parent.map.maps[this.parent.level - 1][y]?.[x] === 2) result.push([x, y]);
         }
 
         const cell = result[random(0, result.length - 1)];
@@ -81,28 +81,28 @@ export class Antihero {
         this.posY += this.speedY;
     }
 
-    passBetweenBodies(map) {
+    passBetweenBodies() {
         const heroCellX = Math.floor(this.posX / cellSize);
         const heroCellY = Math.floor(this.posY / cellSize);
 
         if (this.speedX > 0 &&
-            heroCellX < map[0].length - 1 &&
-            map[heroCellY][heroCellX + 1] !== 1)
+            heroCellX < this.parent.map.maps[this.parent.level - 1][0].length - 1 &&
+            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX + 1] !== 1)
             this.posY = heroCellY * cellSize + cellSize / 2;
 
         if (this.speedX < 0 && heroCellX > 0 &&
-            map[heroCellY][heroCellX - 1] !== 1)
+            this.parent.map.maps[this.parent.level - 1][heroCellY][heroCellX - 1] !== 1)
             this.posY = heroCellY * cellSize + cellSize / 2;
 
         if (this.speedY > 0 &&
-            heroCellY <  map.length - 1 &&
-            map[heroCellY <  map.length - 1
+            heroCellY <  this.parent.map.maps[this.parent.level - 1].length - 1 &&
+            this.parent.map.maps[this.parent.level - 1][heroCellY < this.parent.map.maps[this.parent.level - 1].length - 1
                 ? heroCellY + 1
                 : heroCellY][heroCellX] !== 1)
             this.posX = heroCellX * cellSize + cellSize / 2;
 
         if (this.speedY < 0 && heroCellY > 0 &&
-            map[heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
+            this.parent.map.maps[this.parent.level - 1][heroCellY ? heroCellY - 1 : 0][heroCellX] !== 1)
             this.posX = heroCellX * cellSize + cellSize / 2;
     }
 }
