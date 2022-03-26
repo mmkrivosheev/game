@@ -18,7 +18,7 @@ const modal = document.querySelector("#modal");
 export class Game {
     constructor() {
         this.heroSpeed = 35;
-        this.antiheroSpeed = 28;
+        this.antiheroSpeed = 26;
         this.level = 0;
         this.coins = 0;
         this.life = 3;
@@ -28,7 +28,7 @@ export class Game {
         this.isSound = false;
         this.isMenuShow = false;
         this.isSaveShow = false;
-        this.isRulesShow = false;
+        this.isModalOpenShow = false;
         this.map = new Map(this);
         this.hero = new Hero(this, 3, 11, this.heroSpeed);
         this.antihero_1 = new Antihero(this, 0, 0, this.antiheroSpeed);
@@ -60,7 +60,7 @@ export class Game {
     }
 
     pause(boolean) {
-        if (!this.isPlay || this.isMenuShow || this.isSaveShow || this.isRulesShow) return;
+        if (!this.isPlay || this.isMenuShow || this.isSaveShow || this.isModalOpenShow) return;
         if (!boolean) this.isPause = !this.isPause;
 
         if (this.isPause) {
@@ -89,7 +89,7 @@ export class Game {
     }
 
     menu() {
-        if (this.isRulesShow) return;
+        if (this.isModalOpenShow) return;
         if(this.isSaveShow) this.save();
         this.isMenuShow = !this.isMenuShow;
 
@@ -131,7 +131,7 @@ export class Game {
     }
 
     save() {
-        if (this.isRulesShow) return;
+        if (this.isModalOpenShow) return;
         if(this.isMenuShow) this.menu();
         this.isSaveShow = !this.isSaveShow;
 
@@ -199,7 +199,7 @@ export class Game {
         this.hero.getReactionToStaticBodyCollision();
         this.hero.getReactionToCoinCollision();
 
-        if (!this.isMenuShow && !this.isSaveShow && !this.isRulesShow) {
+        if (!this.isMenuShow && !this.isSaveShow && !this.isModalOpenShow) {
             this.map.drawMap();
             this.hero.drawHero();
             this.antihero_1.drawAntihero();
@@ -217,7 +217,6 @@ export class Game {
         this.antihero_4.moveAntihero();
 
         if (this.coins === this.map.coinsTotal) {
-        // if (this.coins === 1) {
             this.modal(GREAT, music.musicWin, 300);
             this.coinsTotal += this.coins;
             this.isPlay = false;
@@ -236,7 +235,8 @@ export class Game {
             scoreboard.classList.remove("life");
             this.coinsTotal += this.coins;
             this.isPlay = false;
-            scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
+            if (!this.isMenuShow && !this.isSaveShow)
+                scoreboard.innerHTML = "TOTAL" + " : " + this.coinsTotal;
         }
 
         if (this.isPlay && !this.isMenuShow && !this.isSaveShow)

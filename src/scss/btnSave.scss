@@ -9,7 +9,7 @@
   align-items: center;
   height: 80%;
   width: 80%;
-  padding: 2% 2% 30% 2%;
+  padding: 2% 2% 15% 2%;
   background-color: #778899;
   transform: translate3d(-50%, -50%, 0);
 }
@@ -18,19 +18,14 @@
   display: flex;
 }
 
-.save form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .save .total {
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 15%;
 }
 
-.save .message {
+.save .message,
+.save .error {
   font-size: 50%;
   text-align: justify;
   margin-bottom: 5%;
@@ -39,44 +34,48 @@
   }
 }
 
+.save .error {
+  font-weight: 400;
+  text-align: center;
+  align-self: flex-start;
+  margin: 2% 0 0 2%;
+  color: #f2dc4b;
+}
+
+.save form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .save .input-name {
-  display: block;
   color: inherit;
-  //width: 60%;
-  width: 15rem;
   font-size: 62.5%;
-  padding: 2% 4%;
-  margin: 4%;
+  flex-grow: 1;
+  padding: 0.6rem 1rem;
+  margin-right: 4%;
   border: none;
-  outline: none;
-  appearance: auto;
   border-radius: 0.05rem;
   background-color: #DAD0D0;
-  box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+  outline: 1px solid #465361;
   @media (max-width: $screen-mobile) {
     font-size: 100%;
     padding: 2.0%;
-    width: 50%;
   }
 }
 
-.save .input-name:focus {
-  outline: none;
-  border: none;
-}
-
-.save .btn-save-result {
+.save .btn-save-result,
+.btn-show-results {
   font-size: 62.5%;
   font-weight: 700;
   text-transform: uppercase;
   color:inherit;
-  display: block;
-  padding: 2% 4%;
+  padding: 0.6rem 1rem;
   border: none;
   border-radius: 0.05rem;
-  background-color: #8d99a7;
-  text-shadow: 0 0 0.15vmin #464b51;
-  box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+  background-color: #7D848C;
+  outline: 1px solid #465361;
   transition: all 0.2s ease;
   @media (max-width: $screen-mobile) {
     font-size: 100%;
@@ -85,10 +84,14 @@
   }
 }
 
-.save .btn-save-result:hover {
-  cursor: pointer;
+.btn-show-results {
+  margin-top: auto;
+  @media (max-width: $screen-mobile) {
+    width: auto;
+  }
 }
 
-.save .btn-save-result:active {
-  box-shadow: inset 0 0 2px #3c4f55, 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+.save .btn-save-result:hover,
+.btn-show-results:hover {
+  cursor: pointer;
 }

@@ -61,7 +61,7 @@ export function resize(game) {
     game.antihero_4.size = cellSize;
     game.antihero_4.speed = game.antihero_4.speed * (cellSize / PrevCellSize);
 
-    if (!game.isMenuShow && !game.isSaveShow && !game.isRulesShow) {
+    if (!game.isMenuShow && !game.isSaveShow && !game.isModalOpenShow) {
         game.map.drawMap();
         game.hero.drawHero();
         game.antihero_1.drawAntihero();
@@ -71,9 +71,29 @@ export function resize(game) {
     } else {
         game.map.drawMap(true);
     }
+
+    document.body.style.fontSize = cellSize + "px";
+    if (mq1.matches)
+        document.body.style.width = "100%";
+    else
+        document.body.style.width = cvsWidth + cellSize + "px";
+
+    if (mq2.matches) {
+        const windowHeight = window.innerHeight;
+        const wrapperHeight = wrapper.clientHeight;
+        const height = windowHeight - wrapperHeight;
+
+        control.style.bottom = height / 2 + "px";
+        btnSet.style.top = wrapperHeight / 2 + cellSize + "px";
+        btnSetMobile.style.bottom = height / 2 + "px";
+    } else {
+        control.style.bottom = "";
+        btnSet.style.top = "";
+        btnSetMobile.style.bottom = "";
+    }
 }
 
-export function watchScreenChange() {
+export function getScreenChange() {
     document.body.style.fontSize = cellSize + "px";
 
     if (mq1.matches)
@@ -81,76 +101,13 @@ export function watchScreenChange() {
     else
         document.body.style.width = cvsWidth + cellSize + "px";
 
-    mq1.addListener((mq1) => {
-        if (mq1.matches)
-            document.body.style.width = "100%";
-        else
-            document.body.style.width = cvsWidth + cellSize + "px";
-    });
+    if (mq2.matches) {
+        const windowHeight = window.innerHeight;
+        const wrapperHeight = wrapper.clientHeight;
+        const height = windowHeight - wrapperHeight;
 
-    window.addEventListener("resize", () => {
-        const mq1 = window.matchMedia("(max-width: 1199px)");
-        document.body.style.fontSize = cellSize + "px";
-
-        if (mq1.matches)
-            document.body.style.width = "100%";
-        else
-            document.body.style.width = cvsWidth + cellSize + "px";
-
-        mq1.addListener((mq1) => {
-            if (mq1.matches)
-                document.body.style.width = "100%";
-            else
-                document.body.style.width = cvsWidth + cellSize + "px";
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        if (mq2.matches) {
-            const windowHeight = window.innerHeight;
-            const wrapperHeight = wrapper.clientHeight;
-            const height = windowHeight - wrapperHeight;
-
-            control.style.bottom = height / 2 + "px";
-            btnSet.style.top = wrapperHeight / 2 + cellSize + "px";
-            btnSetMobile.style.bottom = height / 2 + "px";
-        } else {
-            control.style.bottom = "";
-            btnSet.style.top = "";
-            btnSetMobile.style.bottom = "";
-        }
-
-        window.addEventListener("resize", () => {
-            if (mq2.matches) {
-                const windowHeight = window.innerHeight;
-                const wrapperHeight = wrapper.clientHeight;
-                const height = windowHeight - wrapperHeight;
-
-                control.style.bottom = height / 2 + "px";
-                btnSet.style.top = wrapperHeight / 2 + cellSize + "px";
-                btnSetMobile.style.bottom = height / 2 + "px";
-            } else {
-                control.style.bottom = "";
-                btnSet.style.top = "";
-                btnSetMobile.style.bottom = "";
-            }
-        });
-
-        mq2.addListener((mq2) => {
-        if (mq2.matches) {
-            setTimeout(() => {
-                const windowHeight = window.innerHeight;
-                const wrapperHeight = wrapper.clientHeight;
-                const height = windowHeight - wrapperHeight;
-                control.style.bottom = height / 2 + "px";
-                btnSet.style.top = wrapperHeight / 2 + cellSize + "px";
-                btnSetMobile.style.bottom = height / 2 + "px";
-            }, 20);
-        } else {
-            control.style.bottom = "";
-            btnSet.style.top = "";
-            btnSetMobile.style.bottom = "";
-        }
-        });
-    });
+        control.style.bottom = height / 2 + "px";
+        btnSet.style.top = wrapperHeight / 2 + cellSize + "px";
+        btnSetMobile.style.bottom = height / 2 + "px";
+    }
 }

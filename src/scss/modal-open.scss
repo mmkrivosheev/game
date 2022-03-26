@@ -1,4 +1,4 @@
-.rules {
+.modal-open {
   color: #61666C;
   display: none;
   text-align: justify;
@@ -19,15 +19,15 @@
   transform: translate3d(-50%, -47%, 0);
 }
 
-.show-rules {
+.show-modal-open {
   display: flex;
-  animation-name: rules;
+  animation-name: modal-open;
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
 }
 
-.rules .title {
+.modal-open .title {
   font-size: 130%;
   margin-bottom: 5%;
   text-transform: uppercase;
@@ -36,14 +36,14 @@
   }
 }
 
-.rules .text {
+.modal-open .text {
   line-height: 1.5;
   @media (max-width: $screen-mobile) {
     font-size: 120%;
   }
 }
 
-.rules .btn-ok {
+.modal-open .btn-ok {
   font-size: 150%;
   font-weight: 700;
   text-transform: uppercase;
@@ -57,7 +57,7 @@
   }
 }
 
-@keyframes rules {
+@keyframes modal-open {
   0% {
     font-size: 0;
     color: #DAD0D0;

@@ -29,20 +29,28 @@
   padding: 1.5%;
   border: none;
   border-radius: 5rem;
-  background-color: #8d99a7;
+  background-color: #7D848C;
   text-shadow: 0 0 0.15vmin #464b51;
   box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
   transition: all 0.2s ease;
   @media (max-width: $screen-mobile) {
-    //font-size: 100%;
     font-size: 5vmin;
-    //width: 50%;
     width: 38vmin;
     padding: 2.0%;
   }
+  @media (max-width: $screen-mobile_2) {
+    font-size: 7vmin;
+    width: 50vmin;
+    padding: 2.0%;
+  }
+
 }
 
 .menu .btn-menu:hover {
   box-shadow: 0 0 0 1px #3c4f55, 0 0 4px 4px #556C82;
   cursor: pointer;
+}
+
+.menu .btn-menu:active {
+  box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
 }
