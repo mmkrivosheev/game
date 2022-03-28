@@ -154,7 +154,7 @@ export class Hero {
     getReactionToCoinCollision() {
         if (this.coinCollision.length) {
             const [x, y] = this.coinCollision;
-            if (this.parent.isSound) music.musicCoin.play();
+            if (isSound) music.musicCoin.play();
             this.parent.map.maps[this.parent.level - 1][y][x] = 0;
             this.parent.coins++;
             this.coinCollision = [];

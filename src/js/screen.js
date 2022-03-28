@@ -1,3 +1,5 @@
+import {drawEmptyCanvas} from "./handlers";
+
 const wrapper = document.querySelector("#wrapper");
 const control = document.querySelector("#control");
 const btnSet = document.querySelector(".btn-set");
@@ -33,44 +35,47 @@ export function calcCvsSize() {
 }
 
 export function resize(game) {
+    const URLHash = window.location.hash;
+    const stateStr = URLHash.substr(1);
     const PrevCellSize = cellSize;
     calcCvsSize();
 
-    game.hero.posX = game.hero.posX * (cellSize / PrevCellSize);
-    game.hero.posY = game.hero.posY * (cellSize / PrevCellSize);
-    game.hero.size = cellSize;
-    game.hero.speed = game.hero.speed * (cellSize / PrevCellSize);
+    if (stateStr === "" || stateStr === "menu" || stateStr === "save") drawEmptyCanvas();
 
-    game.antihero_1.posX = game.antihero_1.posX * (cellSize / PrevCellSize);
-    game.antihero_1.posY = game.antihero_1.posY * (cellSize / PrevCellSize);
-    game.antihero_1.size = cellSize;
-    game.antihero_1.speed = game.antihero_1.speed * (cellSize / PrevCellSize);
+    if (stateStr === "game") {
+        game.hero.posX = game.hero.posX * (cellSize / PrevCellSize);
+        game.hero.posY = game.hero.posY * (cellSize / PrevCellSize);
+        game.hero.size = cellSize;
+        game.hero.speed = game.hero.speed * (cellSize / PrevCellSize);
 
-    game.antihero_2.posX = game.antihero_2.posX * (cellSize / PrevCellSize);
-    game.antihero_2.posY = game.antihero_2.posY * (cellSize / PrevCellSize);
-    game.antihero_2.size = cellSize;
-    game.antihero_2.speed = game.antihero_2.speed * (cellSize / PrevCellSize);
+        game.antihero_1.posX = game.antihero_1.posX * (cellSize / PrevCellSize);
+        game.antihero_1.posY = game.antihero_1.posY * (cellSize / PrevCellSize);
+        game.antihero_1.size = cellSize;
+        game.antihero_1.speed = game.antihero_1.speed * (cellSize / PrevCellSize);
 
-    game.antihero_3.posX = game.antihero_3.posX * (cellSize / PrevCellSize);
-    game.antihero_3.posY = game.antihero_3.posY * (cellSize / PrevCellSize);
-    game.antihero_3.size = cellSize;
-    game.antihero_3.speed = game.antihero_3.speed * (cellSize / PrevCellSize);
+        game.antihero_2.posX = game.antihero_2.posX * (cellSize / PrevCellSize);
+        game.antihero_2.posY = game.antihero_2.posY * (cellSize / PrevCellSize);
+        game.antihero_2.size = cellSize;
+        game.antihero_2.speed = game.antihero_2.speed * (cellSize / PrevCellSize);
 
-    game.antihero_4.posX = game.antihero_4.posX * (cellSize / PrevCellSize);
-    game.antihero_4.posY = game.antihero_4.posY * (cellSize / PrevCellSize);
-    game.antihero_4.size = cellSize;
-    game.antihero_4.speed = game.antihero_4.speed * (cellSize / PrevCellSize);
+        game.antihero_3.posX = game.antihero_3.posX * (cellSize / PrevCellSize);
+        game.antihero_3.posY = game.antihero_3.posY * (cellSize / PrevCellSize);
+        game.antihero_3.size = cellSize;
+        game.antihero_3.speed = game.antihero_3.speed * (cellSize / PrevCellSize);
 
-    if (!game.isMenuShow && !game.isSaveShow && !game.isModalOpenShow) {
+        game.antihero_4.posX = game.antihero_4.posX * (cellSize / PrevCellSize);
+        game.antihero_4.posY = game.antihero_4.posY * (cellSize / PrevCellSize);
+        game.antihero_4.size = cellSize;
+        game.antihero_4.speed = game.antihero_4.speed * (cellSize / PrevCellSize);
+
         game.map.drawMap();
         game.hero.drawHero();
         game.antihero_1.drawAntihero();
         game.antihero_2.drawAntihero();
         game.antihero_3.drawAntihero();
         game.antihero_4.drawAntihero();
-    } else {
-        game.map.drawMap(true);
     }
+
 
     document.body.style.fontSize = cellSize + "px";
     if (mq1.matches)

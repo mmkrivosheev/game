@@ -3,19 +3,14 @@
   z-index: 2;
   top: 50%;
   left: 50%;
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 80%;
   width: 80%;
-  padding: 2% 2% 30% 2%;
-  background-color: #778899;
+  padding: 0 2% 30% 2%;
   transform: translate3d(-50%, -50%, 0);
-}
-
-.show-menu {
-  display: flex;
 }
 
 .menu .btn-menu {

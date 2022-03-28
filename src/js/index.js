@@ -1,122 +1,116 @@
 import { Game } from "./game";
-import { getData, updateData } from "./records";
+import { addBaseHandlers, addHandlers } from "./handlers";
 import * as screen from "./screen";
 import "../scss/index.scss";
 
-const menu = document.querySelector("#menu");
-const save = document.querySelector("#save");
-const modalOpen = document.querySelector("#modal-open");
-const coinsTotal = save.querySelector("#total");
-const btnPause = document.querySelector("#btn-pause");
-const btnSound = document.querySelector("#btn-sound");
+screen.calcCvsSize();
+window.isSound = false;
+let SPAState = {};
+let game;
 const btnMenu = document.querySelector("#btn-menu");
 const btnSave = document.querySelector("#btn-save");
-const btnMenuNewGame = menu.querySelector("#btn-new-game");
-const btnMenuRules = menu.querySelector("#btn-rules");
-const scoreboard = document.querySelector(".scoreboard");
-const inputName = save.querySelector("#input-name");
-const btnSaveResult = save.querySelector("#btn-save-result");
-const btnShowResults = save.querySelector("#btn-show-results");
-const btnOk = modalOpen.querySelector("#btn-ok");
-const btnSet = document.querySelector(".btn-set");
-const btnSetMobile = document.querySelector(".btn-set-mobile");
-let resultCoinsTotal;
-
-screen.calcCvsSize();
-let game = new Game();
-game.start();
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.documentElement.style.display = "block";
-    screen.getScreenChange();
-});
 
 window.addEventListener("resize", () => screen.resize(game));
+window.onhashchange = switchToStateFromURLHash;
+switchToStateFromURLHash();
+addBaseHandlers();
 
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Control") game.pause();
-});
+export function switchToStateFromURLHash() {
+    const URLHash = window.location.hash;
+    const stateStr = URLHash.substr(1);
+    let pageHTML = "";
 
-btnPause.addEventListener("click", () => {
-    btnPause.blur();
-    game.pause();
-});
+    if (stateStr !== "") SPAState = {pageName: stateStr};
+    else SPAState = {pageName: "main"};
 
-btnSound.addEventListener("click", () => {
-    btnSound.blur();
-    game.soundOn();
-});
+    switch (SPAState.pageName) {
+        case "main":
+            if (game) game.isExit = true;
+            pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
+            pageHTML += "<div class=\"welcome\">";
+            pageHTML += '<p class=\"title\">Welcome !</p>';
+            pageHTML += '<p class=\"text\">This game was created as a graduation project of the course:</p>';
+            pageHTML += '<p class=\"text-upper\">Javascript web application development</p>';
+            pageHTML += "</div>";
+            document.querySelector(".main").innerHTML = pageHTML;
+            addHandlers(game);
+            break;
+        case "game":
+            pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
+            pageHTML += "<div id=\"modal\" class=\"modal\"></div>";
+            document.querySelector(".main").innerHTML = pageHTML;
+            game = new Game(isSound);
+            game.start();
+            addHandlers(game);
+            break;
+        case "menu":
+            if (game) game.isExit = true;
+            pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
+            pageHTML += "<div class=\"menu\" id=\"menu\">";
+            pageHTML += "<button type=\"button\" id=\"btn-new-game\" class=\"btn-menu\">new game</button>";
+            pageHTML += "<button type=\"button\" id=\"btn-rules\" class=\"btn-menu\">rules</button>";
+            pageHTML += "<button type=\"button\" id=\"btn-main\" class=\"btn-menu\">main</button>";
+            pageHTML += "</div>";
+            pageHTML += "<div id=\"modal-open\" class=\"modal-open\">";
+            pageHTML += "<p class=\"title\"></p>";
+            pageHTML += "<p class=\"text\"></p>";
+            pageHTML += "<p id=\"btn-ok\" class=\"btn-ok\">ok</p>";
+            pageHTML += "</div>";
+            document.querySelector(".main").innerHTML = pageHTML;
+            addHandlers(game);
+            break;
+        case "save":
+            if (game) game.isExit = true;
+            pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
+            pageHTML += "<div class=\"save\" id=\"save\">";
+            pageHTML += "<p class=\"total\" id=\"total\"></p>";
+            pageHTML += "<p class=\"message\" id=\"message\">";
+            pageHTML += "If you want to save the result, enter your name and click save.</p>";
+            pageHTML += "<form>";
+            pageHTML += "<input type=\"text\" id=\"input-name\" class=\"input-name\">";
+            pageHTML += "<button type=\"submit\" id=\"btn-save-result\" class=\"btn-save-result\">save</button>";
+            pageHTML += "</form>";
+            pageHTML += "<p class=\"error\" id=\"error\"></p>";
+            pageHTML += "<button type=\"submit\" id=\"btn-show-results\" class=\"btn-show-results\">";
+            pageHTML += "Show the best results</button>";
+            pageHTML += "</div>";
+            pageHTML += "<div id=\"modal-open\" class=\"modal-open\">";
+            pageHTML += "<p class=\"title\"></p>";
+            pageHTML += "<p class=\"text\"></p>";
+            pageHTML += "<p id=\"btn-ok\" class=\"btn-ok\">ok</p>";
+            pageHTML += "</div>";
+            document.querySelector(".main").innerHTML = pageHTML;
+            addHandlers(game);
+            break;
+    }
+}
+
+function switchToState(newState) {
+    location.hash = newState.pageName;
+}
+
+export function switchToMainPage() {
+    switchToState({pageName:""});
+}
+
+export function switchToGamePage() {
+    switchToState({pageName:"game"});
+}
+
+function switchToMenuPage() {
+    switchToState({pageName: "menu"});
+}
+
+function switchToSavePage() {
+    switchToState({pageName: "save"});
+}
 
 btnMenu.addEventListener("click", () => {
     btnMenu.blur();
-    game.menu();
-});
-
-
-btnMenuNewGame.addEventListener("click", () => {
-    game.isPlay = false;
-    menu.classList.remove("show-menu");
-    scoreboard.classList.add("life");
-    btnMenu.blur();
-    game = new Game();
-    scoreboard.setAttribute("data-life", game.life);
-    game.start();
-});
-
-btnMenuRules.addEventListener("click", () => {
-    btnMenuRules.blur();
-    modalOpen.querySelector(".title").innerHTML = "rules";
-    modalOpen.querySelector(".text").innerHTML = `
-        The game has two rounds and you have three lives.
-        You need to collect all the coins on the map. <br><br>
-        Control: <br>
-        move - arrow keys or control panel for mobile devices,
-        pause - ctrl key.
-    `;
-
-    modalOpen.classList.add("show-modal-open");
-    game.isModalOpenShow = true;
-});
-
-btnOk.addEventListener("click", () => {
-    modalOpen.classList.remove("show-modal-open");
-    game.isModalOpenShow = false;
-    modalOpen.querySelector(".text").style.width = "";
+    switchToMenuPage();
 });
 
 btnSave.addEventListener("click", () => {
     btnSave.blur();
-    game.save();
-    resultCoinsTotal = game.isPlay ? game.coinsTotal + game.coins : game.coinsTotal;
-    coinsTotal.innerHTML = "total coins: " + resultCoinsTotal;
+    switchToSavePage();
 });
-
-btnSaveResult.addEventListener("click", (e) => {
-    e.preventDefault();
-    btnSaveResult.blur();
-    updateData(escapeHTML(inputName.value), resultCoinsTotal);
-    inputName.value = "";
-});
-
-btnShowResults.addEventListener("click", () => {
-    btnShowResults.blur();
-    getData(game);
-});
-
-
-btnSetMobile.addEventListener("click", () => {
-    btnSet.classList.toggle("show-btn-set");
-    btnSetMobile.blur();
-});
-
-function escapeHTML(text) {
-    if (!text)
-        return text;
-    text = text.toString()
-        .split("&").join("&amp;")
-        .split("<").join("&lt;")
-        .split(">").join("&gt;")
-        .split('"').join("&quot;")
-        .split("'").join("&#039;");
-    return text;
-}

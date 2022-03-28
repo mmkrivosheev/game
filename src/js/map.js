@@ -64,14 +64,12 @@ export class Map {
         this.coinsTotal = count;
     }
 
-    drawMap(boolean) {
+    drawMap() {
         const cvs = document.getElementById("cvs");
         const ctx = cvs.getContext('2d');
         cvs.width = cvsWidth;
         cvs.height = cvsHeight;
         cvs.style.border = cvsBorder + "px solid " + this.borderColor;
-
-        if (boolean) return;
 
         for (let y = 0; y < this.parent.map.maps[this.parent.level - 1].length; y++) {
             for (let x = 0; x < this.parent.map.maps[this.parent.level - 1][y].length; x++) {

@@ -67,7 +67,7 @@ export class CollisionDetector {
                 this.player.isAntiheroCollision = true;
                 scoreboard.setAttribute("data-life", this.player.parent.life - 1 + "");
                 this.player.parent.life--;
-                if (this.player.parent.isSound) music.musicAntihero.play();
+                if (isSound) music.musicAntihero.play();
 
                 setTimeout(() => {
                     this.stopAntiheroDetector = false;
