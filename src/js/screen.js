@@ -1,4 +1,4 @@
-import {drawEmptyCanvas} from "./handlers";
+import { drawEmptyCanvas } from "./handlers";
 
 const wrapper = document.querySelector("#wrapper");
 const control = document.querySelector("#control");

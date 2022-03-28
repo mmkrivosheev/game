@@ -61,7 +61,9 @@ export function updateData(name, res) {
 
             if (name in result) {
                 error.innerHTML = ERROR_DOUBLE_NAME;
-                setTimeout(() => error.innerHTML = "" , 2000);
+                setTimeout(() => {
+                    if (error) error.innerHTML = "";
+                }, 2000);
                 return;
             }
 

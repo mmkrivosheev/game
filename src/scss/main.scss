@@ -24,10 +24,15 @@ body {
   transform: translate(-50%, -50%);
   @media (max-width: $screen-mobile) {
     position: static;
-    justify-content: start;
     min-height: 100%;
     box-shadow: none;
     transform: translate(0, 0);
+    @media (orientation: portrait) {
+      justify-content: start;
+    }
+    @media (orientation: landscape) {
+      justify-content: center;
+    }
   }
 }
 

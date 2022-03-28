@@ -24,7 +24,10 @@
   font-size: 50%;
   margin-bottom: 5%;
   @media (max-width: $screen-mobile) {
-    font-size: 70%;
+    font-size: 60%;
+  }
+  @media (max-width: $screen-mobile_2) {
+    font-size: 80%;
   }
 }
 
@@ -34,6 +37,12 @@
   align-self: flex-start;
   margin: 2% 0 0 2%;
   color: #f2dc4b;
+  @media (max-width: $screen-mobile) {
+    font-size: 60%;
+  }
+  @media (max-width: $screen-mobile_2) {
+    font-size: 80%;
+  }
 }
 
 .save form {

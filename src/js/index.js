@@ -7,6 +7,7 @@ screen.calcCvsSize();
 window.isSound = false;
 let SPAState = {};
 let game;
+let continueGame = false;
 const btnMenu = document.querySelector("#btn-menu");
 const btnSave = document.querySelector("#btn-save");
 
@@ -28,9 +29,9 @@ export function switchToStateFromURLHash() {
             if (game) game.isExit = true;
             pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
             pageHTML += "<div class=\"welcome\">";
-            pageHTML += '<p class=\"title\">Welcome !</p>';
-            pageHTML += '<p class=\"text\">This game was created as a graduation project of the course:</p>';
-            pageHTML += '<p class=\"text-upper\">Javascript web application development</p>';
+            pageHTML += "<p class=\"title\">Welcome !</p>";
+            pageHTML += "<p class=\"text\">This game was created as a graduation project of the course: ";
+            pageHTML += "<span>Javascript web application development.</span></p>";
             pageHTML += "</div>";
             document.querySelector(".main").innerHTML = pageHTML;
             addHandlers(game);
@@ -39,17 +40,24 @@ export function switchToStateFromURLHash() {
             pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
             pageHTML += "<div id=\"modal\" class=\"modal\"></div>";
             document.querySelector(".main").innerHTML = pageHTML;
-            game = new Game(isSound);
-            game.start();
-            addHandlers(game);
+            if (!continueGame) {
+                game = new Game(isSound);
+                game.start();
+                addHandlers(game);
+            } else {
+                game.start(continueGame);
+                continueGame = false;
+            }
             break;
         case "menu":
             if (game) game.isExit = true;
             pageHTML += "<canvas id=\"cvs\" class=\"cvs\"></canvas>";
             pageHTML += "<div class=\"menu\" id=\"menu\">";
+            pageHTML += "<button type=\"button\" id=\"btn-continue\" class=\"btn-menu\">continue</button>";
             pageHTML += "<button type=\"button\" id=\"btn-new-game\" class=\"btn-menu\">new game</button>";
             pageHTML += "<button type=\"button\" id=\"btn-rules\" class=\"btn-menu\">rules</button>";
             pageHTML += "<button type=\"button\" id=\"btn-main\" class=\"btn-menu\">main</button>";
+            pageHTML += "<p class=\"error\" id=\"error\"></p>";
             pageHTML += "</div>";
             pageHTML += "<div id=\"modal-open\" class=\"modal-open\">";
             pageHTML += "<p class=\"title\"></p>";
@@ -93,7 +101,8 @@ export function switchToMainPage() {
     switchToState({pageName:""});
 }
 
-export function switchToGamePage() {
+export function switchToGamePage(isGame) {
+    if (isGame) continueGame = true;
     switchToState({pageName:"game"});
 }
 

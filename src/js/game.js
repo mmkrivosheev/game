@@ -31,19 +31,25 @@ export class Game {
         this.winTotal = 0;
     }
 
-    start() {
-        this.level++;
-        this.coins = 0;
+    start(continueGame) {
+        if (continueGame) {
+            this.isExit = false;
+            if (!this.isPause) this.pause();
+            else scoreboard.innerHTML = PAUSE;
+        } else {
+            this.level++;
+            this.coins = 0;
+            this.hero.isPause = true;
+            this.modal(LEVEL + this.level, null, 300);
+            scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
+        }
         this.map.drawMap();
         this.hero.drawHero();
         this.antihero_1.drawAntihero();
         this.antihero_2.drawAntihero();
         this.antihero_3.drawAntihero();
         this.antihero_4.drawAntihero();
-        this.hero.isPause = true;
-        this.modal(LEVEL + this.level, null, 300);
         this.map.getCoinsTotal(this.map.maps[this.level - 1]);
-        scoreboard.innerHTML = "L-" + this.level + " : " + this.coins;
         document.addEventListener("keydown", (e) => this.hero.moveHero(e));
         document.addEventListener("click", (e) => this.hero.moveHero(e));
     }
@@ -111,7 +117,7 @@ export class Game {
         this.antihero_4.moveAntihero();
 
         if (this.coins === this.map.coinsTotal) {
-            this.modal(GREAT, music.musicWin, 300);
+            this.modal(GREAT, music.musicWin, 400);
             this.coinsTotal += this.coins;
             this.isPlay = false;
             this.winTotal++;
@@ -125,7 +131,7 @@ export class Game {
         }
 
         if (!this.life) {
-            this.modal(GAME_OVER, music.musicGameOver, 300);
+            this.modal(GAME_OVER, music.musicGameOver, 400);
             scoreboard.classList.remove("life");
             this.coinsTotal += this.coins;
             this.isPlay = false;
@@ -143,8 +149,8 @@ export class Game {
         setTimeout(() => {
             if (isSound) music.play();
             modal.innerHTML = text;
-            modal.classList.add("show-modal");
-
+            if (!modal.classList.contains("show-modal"))
+                modal.classList.add("show-modal");
         }, timeOn);
 
         setTimeout(() => {
@@ -167,8 +173,7 @@ export class Game {
                 this.playerPos(this.antihero_4, 0, 19, 0, 0);
                 this.start();
             }
-
-        }, timeOn + 4300);
+        }, timeOn + 4400);
     }
 
     playerPos(player, cellX,cellY, speedX, speedY) {

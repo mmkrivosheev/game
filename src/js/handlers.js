@@ -1,10 +1,11 @@
-import {switchToGamePage, switchToMainPage, switchToStateFromURLHash} from "./index";
+import { switchToGamePage, switchToMainPage } from "./index";
 import { getData, updateData } from "./records";
 import * as screen from "./screen";
 
 const MAIN = "MAIN";
 const MENU = "MENU";
 const SAVE = "SAVE";
+const NO_GAME = "No starting game";
 
 export function addBaseHandlers() {
     const btnSound = document.querySelector("#btn-sound");
@@ -62,15 +63,28 @@ export function addHandlers(game) {
 
     if (stateStr === "menu") {
         const menu = document.querySelector("#menu");
+        const btnMenuContinue = menu.querySelector("#btn-continue");
         const btnMenuNewGame = menu.querySelector("#btn-new-game");
         const btnMenuMain = menu.querySelector("#btn-main");
         const btnMenuRules = menu.querySelector("#btn-rules");
         const modalOpen = document.querySelector("#modal-open");
         const btnOk = modalOpen.querySelector("#btn-ok");
+        const menuError = document.querySelector("#menu #error");
 
         scoreboard.innerHTML = MENU;
         scoreboard.classList.remove("life");
         drawEmptyCanvas();
+
+        btnMenuContinue.addEventListener("click", () => {
+            btnMenuContinue.blur();
+            if (game && game.life) switchToGamePage(true);
+            else {
+                menuError.innerHTML = NO_GAME;
+                setTimeout(() => {
+                    if (menuError) menuError.innerHTML = "";
+                }, 2000);
+            }
+        });
 
         btnMenuNewGame.addEventListener("click", () => {
             btnMenuNewGame.blur();

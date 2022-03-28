@@ -34,7 +34,7 @@
     padding: 2.0%;
   }
   @media (max-width: $screen-mobile_2) {
-    font-size: 7vmin;
+    font-size: 6.5vmin;
     width: 50vmin;
     padding: 2.0%;
   }
@@ -48,4 +48,20 @@
 
 .menu .btn-menu:active {
   box-shadow: 0 0 0 1px #3c4f55, 0 0 2px 1px #556C82;
+}
+
+.menu .error {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  font-size: 50%;
+  font-weight: 400;
+  color: #f2dc4b;
+  transform: translate(-50%, 0);
+  @media (max-width: $screen-mobile) {
+    font-size: 60%;
+  }
+  @media (max-width: $screen-mobile_2) {
+    font-size: 80%;
+  }
 }

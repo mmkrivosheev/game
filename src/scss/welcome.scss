@@ -21,18 +21,17 @@
 
 .welcome .text {
   font-size: 50%;
+  line-height: 1.8;
   margin-bottom: 5%;
+  text-align: center;
   @media (max-width: $screen-mobile) {
-    font-size: 70%;
+    font-size: 60%;
+  }
+  @media (max-width: $screen-mobile_2) {
+    font-size: 80%;
   }
 }
 
-.welcome .text-upper {
-  font-size: 50%;
-  text-align: center;
+.welcome .text span {
   text-transform: uppercase;
-  margin-bottom: 5%;
-  @media (max-width: $screen-mobile) {
-    font-size: 70%;
-  }
 }
