@@ -8,9 +8,11 @@ window.isSound = false;
 let SPAState = {};
 let game;
 let continueGame = false;
+const NO_SAVE = "There is not a saved game";
 const btnMenu = document.querySelector("#btn-menu");
 const btnSave = document.querySelector("#btn-save");
 
+window.onbeforeunload = noSave;
 window.addEventListener("resize", () => screen.resize(game));
 window.onhashchange = switchToStateFromURLHash;
 switchToStateFromURLHash();
@@ -123,3 +125,8 @@ btnSave.addEventListener("click", () => {
     btnSave.blur();
     switchToSavePage();
 });
+
+function noSave(e) {
+    if (game && game.life && game.winTotal !== game.levelTolal)
+        e.returnValue = alert(NO_SAVE);
+}

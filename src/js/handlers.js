@@ -77,7 +77,8 @@ export function addHandlers(game) {
 
         btnMenuContinue.addEventListener("click", () => {
             btnMenuContinue.blur();
-            if (game && game.life) switchToGamePage(true);
+            if (game && game.life && game.winTotal !== game.levelTolal)
+                switchToGamePage(true);
             else {
                 menuError.innerHTML = NO_GAME;
                 setTimeout(() => {
