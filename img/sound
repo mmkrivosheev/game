@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 320 512" style="enable-background:new 0 0 320 512;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#464B51;}
-</style>
-<path class="st0" d="M320,64v383.1c0,12.6-7.3,24-18.8,29.2c-5.1,2.8-8.8,3.7-13.2,3.7c-7.7,0-15.3-2.8-21.3-8.1L131.8,352H48
-	c-26.5,0-48-21.5-48-47.1V208c0-26.5,21.5-47.1,48-47.1h83.8L266.7,41c9.4-8.4,22.9-10.5,34.4-5.3C312.7,39.1,320,51.4,320,64z"/>
-</svg>
